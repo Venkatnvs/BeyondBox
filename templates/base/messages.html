@@ -1,7 +1,10 @@
 {% if messages %}
-<script>
+<div class="messages">
     {% for message in messages %}
-        toastr["{{ message.tags|default:'info' }}"]("{{ message|safe }}");
+    <div {% if message.tags %} class="alert alert-sm alert-{{ message.tags }} alert-dismissible fade show"{% endif %}>
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
     {% endfor %}
-</script>
+</div>
 {% endif %}

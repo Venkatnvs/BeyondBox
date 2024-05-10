@@ -1,6 +1,6 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en" class="light-style">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
@@ -24,8 +24,6 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" />
     <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.full.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" />
-    <link href="{% static 'main/css/toastr.css' %}" rel="stylesheet"/>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="{% static 'main/css/chatbot.css' %}" rel="stylesheet"/>
     <link href="{% static 'main/css/main.css' %}" rel="stylesheet"/>
@@ -34,23 +32,7 @@
     {% block scripts_top %}
 
     {% endblock scripts_top %}
-    <script>
-      toastr.options = {
-          "positionClass": "toast-top-right",
-          "closeButton": true,
-          "progressBar": true,
-          "newestOnTop": true,
-          "showEasing": "swing",
-          "hideEasing": "linear",
-          "showMethod": "fadeIn",
-          "hideMethod": "fadeOut",
-          "showDuration": 400,
-          "hideDuration": 200,
-          "timeOut": 10000,
-          "extendedTimeOut": 10000,
-          "tapToDismiss": false
-      };
-  </script>
+    
     {% block styles %}
     {% endblock styles %}
     <style>
