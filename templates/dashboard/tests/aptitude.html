@@ -1,0 +1,366 @@
+{% extends 'base/index.html' %}
+{% load static %}
+{% load cmutils %}
+
+{% block title %}
+Apitude Traning | {{site_name}}
+{% endblock title %}
+
+{% block styles %}
+    <style>
+        #result_chart{
+            width: 100%;
+            height: 300px;
+        }
+    </style>
+{% endblock styles %}
+
+{% block content %}
+<h2 class="text-center bg-white shadow-sm py-1 bg-opacity-75 text-dark fw-bold border border-default border-2 rounded-pill">Aptitude Traning</h2>
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-2 border border-default">
+            <h6 class="text-center fw-bold my-1">Ads</h6>
+              <div class="large-screen d-flex justify-content-center row my-2">
+                  {{ad | GetAd_size:'300x600' | safe}}
+              </div>
+              <div class="small-screen justify-content-center row my-2">
+                  {{ad | GetAd_size:'300x200' | safe}}
+              </div>
+          </div>
+        <div class="col-md-8 mx-auto">
+            <div id="quiz-container" class="bg-default p-4 rounded">
+                <div id="question" class="mb-4"></div>
+                <div id="options"></div>
+                <div id="timer" class="mb-3">Time Left: <span id="time">60</span> seconds</div>
+                <button id="next-btn" class="btn btn-primary">Next</button>
+            </div>
+
+            <div id="result-container" class="bg-default p-4 rounded mt-4">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h5 id="result"></h5>
+                        <div id="stats" class="mt-3"></div>
+                        <button id="retry-btn" class="btn btn-primary mt-3">Retry</button>
+                    </div>
+                    <div class="col-md-6">
+                        <div id="card" class="mt-3">
+                            <div class="card-body">
+                                <canvas id="result_chart" width="400" height="300"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2 border border-default">
+            <h6 class="text-center fw-bold my-1">Ads</h6>
+              <div class="large-screen d-flex justify-content-center row my-2">
+                  {{ad | GetAd_size:'300x600' | safe}}
+              </div>
+              <div class="small-screen justify-content-center row my-2">
+                  {{ad | GetAd_size:'300x200' | safe}}
+              </div>
+          </div>
+    </div>
+</div>
+{% endblock content %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/@tsparticles/confetti@3.0.3/tsparticles.confetti.bundle.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#result-container').css('display', 'none');
+        var selectedQuestions = [
+            { 
+            question: "The 30 members of a club decided to play a badminton singles tournament. What is the minimum number of matches that must be played to determine the winner?",
+            options: ["15", "29", "61", "None of these"],
+            answer: "29"
+        },
+        {
+            question: "A tailor had a number of shirt pieces to cut from a roll of fabric. He cut each roll of equal length into 10 pieces. He cut at the rate of 45 cuts a minute. How many rolls would be cut in 24 minutes?",
+            options: ["32 rolls", "54 rolls", "108 rolls", "120 rolls"],
+            answer: "120 rolls"
+        },
+        {
+            question: "In a class of 60 students, the number of boys and girls participating in the annual sports is in the ratio 3:2 respectively. The number of girls not participating in the sports is 5 more than the number of boys not participating in the sports. If the number of boys participating in the sports is 15, then how many girls are there in the class?",
+            options: ["20", "25", "30", "Data inadequate"],
+            answer: "30"
+        },
+        {
+            question: "At a dinner party every two guests used a bowl of rice between them, every three guests used a bowl of daal between them and every four used a bowl of meat between them. There were altogether 65 dishes. How many guests were present at the party?",
+            options: ["60", "65", "90", "None of these"],
+            answer: "60"
+        },
+        {
+            question: "In a family each daughter has the same number of brothers as she has sisters and each son has twice as many sisters as he has brothers. How many sons are there in the family?",
+            options: ["2", "3", "4", "5"],
+            answer: "3"
+        },
+        {
+            question: "In a garden, there are 10 rows and 12 columns of mango trees. The distance between the two trees is 2 metres and a distance of one metre is left from all sides of the boundary of the garden. The length of the garden is",
+            options: ["20m", "22m", "24m", "26m"],
+            answer: "24m"
+        },
+        {
+            question: "In a family, the father took 1/4 of the cake and he had 3 times as much as each of the other members had. The total number of family members is",
+            options: ["3", "7", "10", "12"],
+            answer: "3"
+        },
+        {
+            question: "In three coloured boxes - Red, Green and Blue, 108 balls are placed. There are twice as many balls in the green and red boxes combined as there are in the blue box and twice as many in the blue box as there are in the red box. How many balls are there in the green box?",
+            options: ["18", "36", "45", "None of these"],
+            answer: "18"
+        },
+        {
+            question: "A, B C, D and E play a game of cards. A says to B, 'If you give me 3 cards, you will have as many as I have at this moment while if D takes 5 cards from you, he will have as many as E has.' A and C together have twice as many cards as E has B and D together also have the same number of cards as A and C taken together. If together they have 150 cards, how many cards has C got?",
+            options: ["28", "29", "31", "35"],
+            answer: "29"
+        },
+        {
+            question: "A man wears socks of two colours - Black and brown. He has altogether 20 black socks and 20 brown socks in a drawer. Supposing he has to take out the socks in the dark, how many must he take out to be sure that he has a matching pair?",
+            options: ["3", "20", "30", "None of these"],
+            answer: "3"
+        },
+        {
+            question: "Nithya is Sam's Sister. Mogan is Sam’s Father. Selvan is Rajan’s Son. Rajan is Mogan s Brother. How is Nithya related to Selvan?",
+            options: ["Daughter", "Sister", "Cousin", "Wife"],
+            answer: "Cousin"
+        },
+        {
+            question: "I have a few sweets to be distributed. If I keep 2,3 of 4 in a pack, I am left with one sweet. If I keep 5 in a pack, I am left with none. What is the minimum number of sweets I have to pack and distribute?",
+            options: ["25", "37", "54", "65"],
+            answer: "37"
+        },
+        {
+            question: "Mr. X, a mathematician, defines a number as ‘connected with 6 if it is divisible by 6 or if the sum of its digits is 6, or if 6 is one of the digits of the number. Other numbers are all ‘not connected with 6’. As per this definition, the number of integers from 1 to 60 (both inclusive) which are not connected with 6 is",
+            options: ["18", "22", "42", "43"],
+            answer: "22"
+        },
+        {
+            question: "A player holds 13 cards of four suits, of which seven are black and six are red. There are twice as many diamonds as spades and twice as many hearts as diamonds. How many clubs does he hold?",
+            options: ["4", "5", "6", "7"],
+            answer: "6"
+        },
+        {
+            question: "Nitin's age was equal to square of some number last year, and the following year it would be cube of a number. If again Nitin’s age has to be equal to the cube of some number, then for how long he will have to wait?",
+            options: ["10 years", "38 years", "39 years", "64 years"],
+            answer: "64 years"
+        },
+        {
+            question: "At the end of a business conference the ten people present all shake hands with each other once. How many handshakes will there be altogether?",
+            options: ["20", "45", "55", "90"],
+            answer: "45"
+        },
+        {
+            question: "Anand, David, Karim and Mano are fans of games. Each has a different favourite game among hockey, chess, cricket and football. David doesn't watch cricket and hockey matches. Anand doesn't like hockey, chess and cricket. Mano doesn't watch cricket. Which is favourite game of Karim?",
+            options: ["chess", "cricket", "football", "hockey"],
+            answer: "hockey"
+        },
+        {
+            question: "David gets on the elevator at the 11th floor of a building and rides up at the rate of 57 floors per minute. At the same time. Albert gets on an elevator at the 51st floor of the same building and rides down at the rate of 63 floors per minute. If they continue travelling at these rates, then at which floor will their paths cross?",
+            options: ["19", "28", "30", "37"],
+            answer: "19"
+        },
+        {
+            question: "A fibres 5 shots to B’s 3 but A kills only once in 3 shots while B kills once in 2 shots. When B has missed 27 times, A has killed",
+            options: ["30 birds", "60 birds", "72 birds", "90 birds"],
+            answer: "90 birds"
+        },
+        {
+            question: "First bunch of bananas has (1/4) again as many bananas as a second bunch. If the second bunch has 3 bananas less than the first bunch, then the number of bananas in the first bunch is",
+            options: ["9", "10", "12", "15"],
+            answer: "12"
+        },
+        ];
+
+        var currentQuestionIndex = 0;
+        var totalTime = 60; 
+        var timerInterval;
+        var startTime, endTime;
+        var correctAnswers = 0;
+        var incorrectAnswers = 0;
+        var totalAnswerTime = 0;
+        var chart;
+
+        function startTimer() {
+            var timerDisplay = $('#time');
+            timerInterval = setInterval(function() {
+                totalTime--;
+                timerDisplay.text(totalTime);
+                if (totalTime <= 0) {
+                    clearInterval(timerInterval);
+                    totalTime = 60;
+                    displayNextQuestion();
+                }
+            }, 1000);
+        }
+
+        // Shuffle questions
+        selectedQuestions.sort(function() {
+            return Math.random() - 0.5;
+        });
+
+        displayQuestion(selectedQuestions[currentQuestionIndex]);
+        startTimer();
+
+        $('#next-btn').click(function() {
+            clearInterval(timerInterval);
+            totalTime = 60;
+            displayNextQuestion();
+        });
+
+        $('#retry-btn').click(function() {
+            retryQuiz();
+        });
+
+        function displayResult() {
+            selectedQuestions.forEach(function(question) {
+                if (question.answer === question.selectedAnswer) {
+                    correctAnswers++;
+                } else {
+                    incorrectAnswers++;
+                }
+            });
+
+            var totalQuestions = selectedQuestions.length;
+            var percentage = (correctAnswers / totalQuestions) * 100;
+
+            var resultDiv = $('#result');
+            resultDiv.html('Result:');
+            
+            var statsDiv = $('#stats');
+            statsDiv.html('Correct: ' + correctAnswers + '<br>' +
+                            'Incorrect: ' + incorrectAnswers + '<br>' +
+                            'Total Questions: ' + totalQuestions + '<br>' +
+                            'Accuracy: ' + percentage.toFixed(2) + '%<br>' +
+                            'Average Time per Question: ' + (totalAnswerTime / totalQuestions).toFixed(2) + ' seconds');
+            
+            var quizContainer = $('#quiz-container');
+            var resultContainer = $('#result-container');
+            quizContainer.css('display', 'none');
+            resultContainer.css('display', 'block');
+
+            
+            var ctx_D = $('#result_chart');
+            chart = new Chart(ctx_D, {
+                type: 'pie',
+                data: {
+                    labels: ['Correct', 'Incorrect'],
+                    datasets: [{
+                        label: 'Correct vs Incorrect',
+                        backgroundColor: ['#36a2eb', '#ff6384'],
+                        data: [correctAnswers, incorrectAnswers]
+                    }]
+                },
+                options: {
+                    plugins: {
+                        legend: {
+                            labels: {
+                                color: "#ffffff",
+                            },
+                        },
+                    },
+                    title: {
+                        display: true,
+                        text: 'Correct vs Incorrect Answers'
+                    }
+                }
+            });
+            $('#result_chart').css('display', 'block');
+            if (percentage >= 60) {
+                resultDiv.append('<p class="text-success">Congratulations! You have passed the test.</p>');
+                ShowAnimationConfetti(8);
+            } else {
+                resultDiv.append('<p class="text-danger">Sorry! You have failed the test.</p>');
+            }
+        }
+
+        function retryQuiz() {
+            $('#result_chart').css('display', 'none');
+            currentQuestionIndex = 0;
+            correctAnswers = 0;
+            incorrectAnswers = 0;
+            totalAnswerTime = 0;
+            selectedQuestions.forEach(function(question) {
+                question.selectedAnswer = null;
+            });
+            selectedQuestions.sort(function() {
+                return Math.random() - 0.5;
+            });
+            displayQuestion(selectedQuestions[currentQuestionIndex]);
+            startTimer();
+            var quizContainer = $('#quiz-container');
+            var resultContainer = $('#result-container');
+            quizContainer.css('display', 'block');
+            resultContainer.css('display', 'none');
+            chart.destroy();
+        }
+
+        function updateSelectedAnswer(selectedOption) {
+            selectedQuestions[currentQuestionIndex].selectedAnswer = selectedOption;
+        }
+
+        function displayQuestion(questionObj) {
+            var questionDiv = $('#question');
+            questionDiv.text(questionObj.question);
+
+            var optionsDiv = $('#options');
+            optionsDiv.empty();
+
+            questionObj.options.forEach(function(option, index) {
+                var optionButton = $('<button class="option btn btn-light px-3 mx-2 mb-3 rounded-start-pill">' + option + '</button>');
+                optionButton.click(function() {
+                    clearInterval(timerInterval);
+                    endTime = new Date().getTime();
+                    totalAnswerTime += (endTime - startTime) / 1000;
+                    totalTime = 60;
+                    updateSelectedAnswer(option);
+                    if (option === questionObj.answer) {
+                        console.log('Correct!');
+                    } else {
+                        console.log('Incorrect!');
+                    }
+                    displayNextQuestion();
+                });
+                optionsDiv.append(optionButton);
+            });
+            startTime = new Date().getTime();
+        }
+
+        function displayNextQuestion() {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < selectedQuestions.length) {
+                displayQuestion(selectedQuestions[currentQuestionIndex]);
+                startTimer();
+            } else {
+                displayResult();
+            }
+        }
+
+        function ShowAnimationConfetti(seconds = 8) {
+            const end = Date.now() + seconds * 1000;
+    
+            (function frame() {
+                confetti({
+                    particleCount: 5,
+                    angle: 60,
+                    spread: 55,
+                    origin: { x: 0 },
+                });
+    
+                confetti({
+                    particleCount: 5,
+                    angle: 120,
+                    spread: 55,
+                    origin: { x: 1 },
+                });
+    
+                if (Date.now() < end) {
+                    requestAnimationFrame(frame);
+                }
+            })();
+        }
+    });
+</script>
+{% endblock scripts %}

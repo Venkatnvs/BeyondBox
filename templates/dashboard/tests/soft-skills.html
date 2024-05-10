@@ -1,0 +1,493 @@
+{% extends 'base/index.html' %}
+{% load static %}
+{% load cmutils %}
+
+{% block title %}
+Soft Skill Traning | {{site_name}}
+{% endblock title %}
+
+{% block styles %}
+<style>
+    #result_chart {
+        width: 100%;
+        height: 300px;
+    }
+</style>
+{% endblock styles %}
+
+{% block content %}
+<h2
+    class="text-center bg-white shadow-sm py-1 bg-opacity-75 text-dark fw-bold border border-default border-2 rounded-pill">
+    Soft Skill Traning</h2>
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-2 border border-default">
+            <h6 class="text-center fw-bold my-1">Ads</h6>
+              <div class="large-screen d-flex justify-content-center row my-2">
+                  {{ad | GetAd_size:'300x600' | safe}}
+              </div>
+              <div class="small-screen justify-content-center row my-2">
+                  {{ad | GetAd_size:'300x200' | safe}}
+              </div>
+          </div>
+        <div class="col-md-8 mx-auto">
+            <div id="quiz-container" class="bg-default p-4 rounded">
+                <div id="question" class="mb-4"></div>
+                <div id="options"></div>
+                <div id="timer" class="mb-3">Time Left: <span id="time">60</span> seconds</div>
+                <button id="next-btn" class="btn btn-primary">Next</button>
+            </div>
+
+            <div id="result-container" class="bg-default p-4 rounded mt-4">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h5 id="result"></h5>
+                        <div id="stats" class="mt-3"></div>
+                        <button id="retry-btn" class="btn btn-primary mt-3">Retry</button>
+                    </div>
+                    <div class="col-md-6">
+                        <div id="card" class="mt-3">
+                            <div class="card-body">
+                                <canvas id="result_chart" width="400" height="300"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2 border border-default">
+            <h6 class="text-center fw-bold my-1">Ads</h6>
+              <div class="large-screen d-flex justify-content-center row my-2">
+                  {{ad | GetAd_size:'300x600' | safe}}
+              </div>
+              <div class="small-screen justify-content-center row my-2">
+                  {{ad | GetAd_size:'300x200' | safe}}
+              </div>
+          </div>
+    </div>
+</div>
+{% endblock content %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/@tsparticles/confetti@3.0.3/tsparticles.confetti.bundle.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#result-container').css('display', 'none');
+        var selectedQuestions = [
+            {
+                question: "You notice a classmate sitting alone at lunch. They seem upset. What do you do?",
+                options: [
+                    "Go talk to them and ask if everything is okay.",
+                    "Ignore them and continue with your lunch.",
+                    "Laugh and make fun of them with your friends."
+                ],
+                answer: "Go talk to them and ask if everything is okay."
+            },
+            {
+                question: "You have to work on a group project with classmates who have different ideas from yours. What do you do?",
+                options: [
+                    "Listen to everyone's ideas and try to find a compromise.",
+                    "Insist on your own ideas and ignore others.",
+                    "Let others do all the work while you take the credit."
+                ],
+                answer: "Listen to everyone's ideas and try to find a compromise."
+            },
+            {
+                question: "You see a homeless person asking for money on the street. What do you do?",
+                options: [
+                    "Give them some money or food.",
+                    "Ignore them and keep walking.",
+                    "Tell them to get a job and stop begging."
+                ],
+                answer: "Give them some money or food."
+            },
+            {
+                question: "Your friend is upset because they failed an exam. What do you do?",
+                options: [
+                    "Listen to them and offer support.",
+                    "Tell them it's their fault for not studying enough.",
+                    "Laugh at them and make jokes about their failure."
+                ],
+                answer: "Listen to them and offer support."
+            },
+            {
+                question: "You witness someone being bullied. What do you do?",
+                options: [
+                    "Intervene and stand up for the victim.",
+                    "Join in and bully the person too.",
+                    "Ignore it and pretend you didn't see anything."
+                ],
+                answer: "Intervene and stand up for the victim."
+            },
+            {
+                question: "A colleague is struggling with their workload. What do you do?",
+                options: [
+                    "Offer to help them with their tasks.",
+                    "Ignore them and focus on your own work.",
+                    "Tell them to work harder and stop complaining."
+                ],
+                answer: "Offer to help them with their tasks."
+            },
+            {
+                question: "You accidentally break something that belongs to a friend. What do you do?",
+                options: [
+                    "Apologize and offer to replace or fix it.",
+                    "Blame someone else for the damage.",
+                    "Pretend it wasn't you and deny responsibility."
+                ],
+                answer: "Apologize and offer to replace or fix it."
+            },
+            {
+                question: "A family member shares their problems with you. What do you do?",
+                options: [
+                    "Listen empathetically and offer advice or support.",
+                    "Tell them you don't want to hear about their problems.",
+                    "Dismiss their problems as insignificant."
+                ],
+                answer: "Listen empathetically and offer advice or support."
+            },
+            {
+                question: "You see a coworker taking credit for someone else's work. What do you do?",
+                options: [
+                    "Speak up and inform your supervisor or HR.",
+                    "Ignore it and mind your own business.",
+                    "Confront the coworker and accuse them directly."
+                ],
+                answer: "Speak up and inform your supervisor or HR."
+            },
+            {
+                question: "Your sibling borrowed your favorite shirt without asking. What do you do?",
+                options: [
+                    "Ask them politely to return it and respect your belongings.",
+                    "Yell at them and demand they give it back immediately.",
+                    "Steal something of theirs in retaliation."
+                ],
+                answer: "Ask them politely to return it and respect your belongings."
+            },
+            {
+                question: "You receive criticism from your boss in front of your colleagues. What do you do?",
+                options: [
+                    "Listen to the feedback and take it constructively.",
+                    "Argue with your boss and defend yourself.",
+                    "Quit your job in anger."
+                ],
+                answer: "Listen to the feedback and take it constructively."
+            },
+            {
+                question: "Your friend is in an unhealthy relationship. What do you do?",
+                options: [
+                    "Express your concerns and offer support.",
+                    "Stay out of their business and let them figure it out.",
+                    "Encourage them to stay in the relationship because it's easier."
+                ],
+                answer: "Express your concerns and offer support."
+            },
+            {
+                question: "You accidentally hurt someone's feelings with a joke. What do you do?",
+                options: [
+                    "Apologize sincerely and make amends.",
+                    "Laugh it off and tell them to lighten up.",
+                    "Blame them for being too sensitive."
+                ],
+                answer: "Apologize sincerely and make amends."
+            },
+            {
+                question: "You witness someone being discriminated against. What do you do?",
+                options: [
+                    "Stand up against the discrimination and support the victim.",
+                    "Join in with the discrimination to fit in.",
+                    "Ignore it and pretend it's not happening."
+                ],
+                answer: "Stand up against the discrimination and support the victim."
+            },
+            {
+                question: "Your friend is struggling with addiction. What do you do?",
+                options: [
+                    "Offer support and encourage them to seek help.",
+                    "Cut ties with them to avoid getting involved.",
+                    "Mock them for their weakness."
+                ],
+                answer: "Offer support and encourage them to seek help."
+            },
+            {
+                question: "You witness someone being unfairly treated because of their race. What do you do?",
+                options: [
+                    "Speak out against the injustice and support the victim.",
+                    "Stay silent to avoid causing trouble.",
+                    "Agree with the discrimination because it benefits you."
+                ],
+                answer: "Speak out against the injustice and support the victim."
+            },
+            {
+                question: "Your coworker is taking credit for your ideas. What do you do?",
+                options: [
+                    "Address the issue with your coworker or supervisor.",
+                    "Let it go and hope it doesn't happen again.",
+                    "Steal credit for their ideas in return."
+                ],
+                answer: "Address the issue with your coworker or supervisor."
+            },
+            {
+                question: "Your friend is being cyberbullied. What do you do?",
+                options: [
+                    "Offer support and help them report the cyberbullying.",
+                    "Ignore it and tell them to toughen up.",
+                    "Join in with the cyberbullying to fit in."
+                ],
+                answer: "Offer support and help them report the cyberbullying."
+            },
+            {
+                question: "You see someone drop their wallet on the street. What do you do?",
+                options: [
+                    "Pick it up and return it to them.",
+                    "Take the money and discard the wallet.",
+                    "Leave it there and pretend you didn't see it."
+                ],
+                answer: "Pick it up and return it to them."
+            },
+            {
+                question: "Your friend is being pressured to cheat on a test. What do you do?",
+                options: [
+                    "Encourage them to do the right thing and study honestly.",
+                    "Help them cheat to avoid getting caught.",
+                    "Ignore the situation and let them make their own choices."
+                ],
+                answer: "Encourage them to do the right thing and study honestly."
+            },
+            {
+                question: "You accidentally receive extra change from a cashier. What do you do?",
+                options: [
+                    "Return the extra change and notify the cashier.",
+                    "Keep the extra money and say nothing.",
+                    "Leave quickly before anyone notices."
+                ],
+                answer: "Return the extra change and notify the cashier."
+            },
+            {
+                question: "Your friend is being pressured to drink alcohol at a party. What do you do?",
+                options: [
+                    "Support their decision not to drink and help them avoid peer pressure.",
+                    "Encourage them to drink to fit in.",
+                    "Ignore the situation and let them make their own choices."
+                ],
+                answer: "Support their decision not to drink and help them avoid peer pressure."
+            },
+            {
+                question: "You witness someone being sexually harassed. What do you do?",
+                options: [
+                    "Intervene and support the victim, then report the harassment.",
+                    "Join in with the harassment to avoid being targeted.",
+                    "Ignore it and pretend it's not happening."
+                ],
+                answer: "Intervene and support the victim, then report the harassment."
+            },
+            {
+                question: "Your friend is being pressured to smoke cigarettes. What do you do?",
+                options: [
+                    "Support their decision not to smoke and help them resist peer pressure.",
+                    "Encourage them to smoke to fit in.",
+                    "Ignore the situation and let them make their own choices."
+                ],
+                answer: "Support their decision not to smoke and help them resist peer pressure."
+            },
+            {
+                question: "You witness someone being verbally abused. What do you do?",
+                options: [
+                    "Intervene and support the victim, then report the abuse.",
+                    "Join in with the abuse to avoid being targeted.",
+                    "Ignore it and pretend it's not happening."
+                ],
+                answer: "Intervene and support the victim, then report the abuse."
+            }
+        ];
+
+        var currentQuestionIndex = 0;
+        var totalTime = 60;
+        var timerInterval;
+        var startTime, endTime;
+        var correctAnswers = 0;
+        var incorrectAnswers = 0;
+        var totalAnswerTime = 0;
+        var chart;
+
+        function startTimer() {
+            var timerDisplay = $('#time');
+            timerInterval = setInterval(function () {
+                totalTime--;
+                timerDisplay.text(totalTime);
+                if (totalTime <= 0) {
+                    clearInterval(timerInterval);
+                    totalTime = 60;
+                    displayNextQuestion();
+                }
+            }, 1000);
+        }
+
+        // Shuffle questions
+        selectedQuestions.sort(function () {
+            return Math.random() - 0.5;
+        });
+
+        displayQuestion(selectedQuestions[currentQuestionIndex]);
+        startTimer();
+
+        $('#next-btn').click(function () {
+            clearInterval(timerInterval);
+            totalTime = 60;
+            displayNextQuestion();
+        });
+
+        $('#retry-btn').click(function () {
+            retryQuiz();
+        });
+
+        function displayResult() {
+            selectedQuestions.forEach(function (question) {
+                if (question.answer === question.selectedAnswer) {
+                    correctAnswers++;
+                } else {
+                    incorrectAnswers++;
+                }
+            });
+
+            var totalQuestions = selectedQuestions.length;
+            var percentage = (correctAnswers / totalQuestions) * 100;
+
+            var resultDiv = $('#result');
+            resultDiv.html('Result:');
+
+            var statsDiv = $('#stats');
+            statsDiv.html('Correct: ' + correctAnswers + '<br>' +
+                'Incorrect: ' + incorrectAnswers + '<br>' +
+                'Total Questions: ' + totalQuestions + '<br>' +
+                'Accuracy: ' + percentage.toFixed(2) + '%<br>' +
+                'Average Time per Question: ' + (totalAnswerTime / totalQuestions).toFixed(2) + ' seconds');
+
+            var quizContainer = $('#quiz-container');
+            var resultContainer = $('#result-container');
+            quizContainer.css('display', 'none');
+            resultContainer.css('display', 'block');
+
+
+            var ctx_D = $('#result_chart');
+            chart = new Chart(ctx_D, {
+                type: 'pie',
+                data: {
+                    labels: ['Correct', 'Incorrect'],
+                    datasets: [{
+                        label: 'Correct vs Incorrect',
+                        backgroundColor: ['#36a2eb', '#ff6384'],
+                        data: [correctAnswers, incorrectAnswers]
+                    }]
+                },
+                options: {
+                    plugins: {
+                        legend: {
+                            labels: {
+                                color: "#ffffff",
+                            },
+                        },
+                    },
+                    title: {
+                        display: true,
+                        text: 'Correct vs Incorrect Answers'
+                    }
+                }
+            });
+            $('#result_chart').css('display', 'block');
+            if (percentage >= 60) {
+                resultDiv.append('<p class="text-success">Congratulations! You have passed the test.</p>');
+                ShowAnimationConfetti();
+            } else {
+                resultDiv.append('<p class="text-danger">Sorry! You have failed the test.</p>');
+            }
+        }
+
+        function retryQuiz() {
+            $('#result_chart').css('display', 'none');
+            currentQuestionIndex = 0;
+            correctAnswers = 0;
+            incorrectAnswers = 0;
+            totalAnswerTime = 0;
+            selectedQuestions.forEach(function (question) {
+                question.selectedAnswer = null;
+            });
+            selectedQuestions.sort(function () {
+                return Math.random() - 0.5;
+            });
+            displayQuestion(selectedQuestions[currentQuestionIndex]);
+            startTimer();
+            var quizContainer = $('#quiz-container');
+            var resultContainer = $('#result-container');
+            quizContainer.css('display', 'block');
+            resultContainer.css('display', 'none');
+            chart.destroy();
+        }
+
+        function updateSelectedAnswer(selectedOption) {
+            selectedQuestions[currentQuestionIndex].selectedAnswer = selectedOption;
+        }
+
+        function displayQuestion(questionObj) {
+            var questionDiv = $('#question');
+            questionDiv.text(questionObj.question);
+
+            var optionsDiv = $('#options');
+            optionsDiv.empty();
+
+            questionObj.options.forEach(function (option, index) {
+                var optionButton = $('<button class="option btn btn-light px-3 mx-2 mb-3 rounded-start-pill">' + option + '</button>');
+                optionButton.click(function () {
+                    clearInterval(timerInterval);
+                    endTime = new Date().getTime();
+                    totalAnswerTime += (endTime - startTime) / 1000;
+                    totalTime = 60;
+                    updateSelectedAnswer(option);
+                    if (option === questionObj.answer) {
+                        console.log('Correct!');
+                    } else {
+                        console.log('Incorrect!');
+                    }
+                    displayNextQuestion();
+                });
+                optionsDiv.append(optionButton);
+            });
+            startTime = new Date().getTime();
+        }
+
+        function displayNextQuestion() {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < selectedQuestions.length) {
+                displayQuestion(selectedQuestions[currentQuestionIndex]);
+                startTimer();
+            } else {
+                displayResult();
+            }
+        }
+
+        function ShowAnimationConfetti(seconds = 8) {
+            const end = Date.now() + seconds * 1000;
+    
+            (function frame() {
+                confetti({
+                    particleCount: 5,
+                    angle: 60,
+                    spread: 55,
+                    origin: { x: 0 },
+                });
+    
+                confetti({
+                    particleCount: 5,
+                    angle: 120,
+                    spread: 55,
+                    origin: { x: 1 },
+                });
+    
+                if (Date.now() < end) {
+                    requestAnimationFrame(frame);
+                }
+            })();
+        }
+    });
+</script>
+{% endblock scripts %}

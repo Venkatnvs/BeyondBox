@@ -1,0 +1,21 @@
+{% extends 'ctm_admin/base/index.html' %}
+
+{% block title %}
+Staff Users Delete | {{site_name}} Admin
+{% endblock title %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header py-2">
+        <h2>Confirm Delete</h2>
+    </div>
+    <div class="card-body pt-2">
+        <p>Are you sure you want to delete the user "<span class="fw-bold">{{ users.full_name }}</span>"?</p>
+        <form method="post">
+            {% csrf_token %}
+            <button class="btn btn-danger" type="submit">Yes, delete</button>
+            <a class="btn btn-secondary" href="{% url 'ctm_admin-staff-users' %}">Cancel</a>
+        </form>
+    </div>
+</div>
+{% endblock content %}

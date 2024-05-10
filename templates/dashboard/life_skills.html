@@ -1,0 +1,28 @@
+{% extends 'base/index.html' %}
+{% load static %}
+{% load cmutils %}
+
+{% block title %}
+Life Skills | {{site_name}}
+{% endblock title %}
+
+{% block content %}
+
+<div class="container">
+    <h3 class="mb-4 text-center bg-white shadow-sm py-1 bg-opacity-75 text-dark fw-bold border border-default border-2 rounded-pill">Inspirational Quotes</h3>
+    <div class="row">
+        {% for quote, author in quotes %}
+        <div class="col-md-6 mb-3">
+            <div class="card bg-default opacity-100 p-2 h-100" data-aos="fade-up">
+                <div class="card-body p-0 m-0">
+                    <blockquote class="blockquote text-center">
+                        <p class="fs-5 m-0">{{ quote }}</p>
+                        <footer class="blockquote-footer mt-1">- <cite title="Author">{{ author }}</cite></footer>
+                    </blockquote>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock content %}

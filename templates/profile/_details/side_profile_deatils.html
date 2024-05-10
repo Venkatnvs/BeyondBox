@@ -1,0 +1,32 @@
+{% load static %}
+<div class="col">
+    <div class="card">
+        <div class="card-header justify-content-center d-flex">
+            <span>Profile</span>
+        </div>
+        <div class="card-body justify-content-center flex-column d-flex">
+            <img class="img-fluid align-self-center" height="150" width="200"
+                src="{% static 'main/img/profile_page_logo.png' %}"
+                alt=""
+                data-aos="zoom-out" data-aos-delay="100"
+                >
+            <div class="row mt-1">
+                <label class="col-sm-3 col-form-label" for="inputemail">Email</label>
+                <div class="col-sm-9">
+                    <input readonly type="email" name="email" placeholder="abc@gmail.com" class="form-control" id="inputemail"
+                    value="{{ request.user.email }}" />
+                </div>
+            </div>
+            <hr class="mb-2">
+            <div class="row">
+                <label class="col-sm-3 col-form-label" for="inputfullname">Full Name</label>
+                <div class="col-sm-9">
+                    <input readonly type="text" name="fullname" placeholder="Fullname" class="form-control"
+                        id="inputfullname" value="{{ request.user.full_name }}" />
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+

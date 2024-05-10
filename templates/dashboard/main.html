@@ -1,0 +1,134 @@
+{% load static %}
+{% load cmutils %}
+<div class="container">
+  <div class="row my-3">
+    <div class="col-md-10">
+        <section id="hero" class="hero">
+            <div class="container position-relative">
+              <div class="row gy-5" data-aos="fade-in">
+                <div class="col-lg-7 order-2 order-lg-1 d-flex flex-column justify-content-center text-center text-lg-start">
+                  <h2>Welcome to <span>{{site_name}}</span></h2>
+                  <p>We Are on a Mission to Educate the World.</p>
+                  <div class="d-flex justify-content-center justify-content-lg-start">
+                    <a href="{% url 'accounts-register' %}" class="btn-get-started">Get Started</a>
+                  </div>
+                </div>
+                <div class="col-lg-5 order-1 order-lg-2">
+                  <img src="https://bootstrapmade.com/demo/templates/Impact/assets/img/hero-img.svg" class="img-fluid" alt="home_logo" data-aos="zoom-out" data-aos-delay="100">
+                </div>
+              </div>
+            </div>
+          </section>
+    </div>
+    <div class="col-md-2 border border-default">
+      <h6 class="text-center fw-bold my-1">Ads</h6>
+        <div class="large-screen d-flex justify-content-center row my-2">
+            {{ad | GetAd_size:'300x600' | safe}}
+        </div>
+        <div class="small-screen justify-content-center row my-2">
+            {{ad | GetAd_size:'300x200' | safe}}
+        </div>
+    </div>
+</div>
+</div>
+<div class="container bg-default">
+  <div class="row">
+       <div class="text-center mt-3">
+           <h1>Everything you need for your foreign education</h1>
+       </div>
+       <div class="row mt-2">
+        <div class="col-md-2"></div>
+        <p class="col-md-8 text-center">You're about to embark on the adventure of a lifetime but there are a few things you need to do before you catch your flight. We’re here to help you prepare for your study abroad journey with our simple, informative guide.</p>
+        <div class="col-md-2"></div>
+       </div>
+   </div>
+
+   <div class="container px-5">
+    <div class="box-container">
+
+        <div class="card">
+            <i class="fa-solid fa-graduation-cap fa-2x text-center mb-3"></i>
+            <h2 class="text-center">IELTS / PTE Training</h2>
+            <p>18-day course taught by professional staff with classroom training and mock tests</p>
+        </div>
+
+        <div class="card">
+            <i class="fa-solid fa-arrows-down-to-people fa-2x text-center mb-3"></i>
+            <h2 class="text-center">Shortlisting</h2>
+            <p>Shortlist your dream Course, Universities and Countries with our expert guidance</p>
+        </div>
+
+        <div class="card">
+            <i class="fa-solid fa-scroll fa-2x text-center mb-3"></i>
+            <h2 class="text-center">Admissions</h2>
+            <p>University applications and tracking scholarship & assistantship options</p>
+        </div>
+
+    </div>
+  </div>
+</div>
+<div class="container">
+  <div class="row">
+    <div class="text-center mt-3">
+        <h1 class="text-default">Explore Places To Study Abroad</h1>
+    </div>
+    <div class="row mt-2">
+     <div class="col-md-2"></div>
+     <p class="col-md-8 text-center text-default">Studying abroad may be one of the most beneficial experiences for a college student. By studying abroad, students have the opportunity to study in a foreign nation and take in the allure and culture of a new land.The biggest reason you should consider a study abroad program is the opportunity to see the world . By studying abroad, you will experience a brand-new country with incredible new outlooks, customs and activities.</p>
+     <div class="col-md-2"></div>
+    </div>
+  </div>
+  <div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="overflow-hidden">
+                <div class="study_cnt_slide">
+                    <img src="{% static 'applies/img/usa.jpg' %}" alt="country_imgs">
+                    <img src="{% static 'applies/img/uk.jpg' %}" alt="country_imgs">
+                    <img src="{% static 'applies/img/canada.jpg' %}" alt="country_imgs">
+                    <img src="{% static 'applies/img/europe.jpg' %}" alt="country_imgs">
+                    <img src="{% static 'applies/img/australia.jpg' %}" alt="country_imgs">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+<div class="container bg-default">
+  <div class="row">
+    <div class="box-container">
+      <img class="img-fluid rounded" src="{% static 'applies/img/gradu_girl_logo.jpg' %}" alt="img">
+      <div class="text-center">
+        <h2>Today Is You,<br>Tomorrow Will Be Yours</h2>
+        <p>{{site_name}}, with its team of experienced counsellors trained by partnered universities and a researched understanding of every step involved will gaurantee you the right guidance and a path to success.</p>
+        <div class="text-center">
+          <ul class="list-group list-group-flush d-flex justify-content-start align-items-start">
+            <li class="list-group-item bg-transparent text-light border-0"><i class="fa-solid fa-square-check me-1"></i>&nbsp;Experienced Counsellors</li>
+            <li class="list-group-item bg-transparent text-light border-0"><i class="fa-solid fa-square-check me-1"></i>&nbsp;Always At Your Comforts</li>
+            <li class="list-group-item bg-transparent text-light border-0"><i class="fa-solid fa-square-check me-1"></i>&nbsp;Interact with University Representatives</li>
+            <li class="list-group-item bg-transparent text-light border-0"><i class="fa-solid fa-square-check me-1"></i>&nbsp;Gauranted Scholarships</li>
+            <li class="list-group-item bg-transparent text-light border-0"><i class="fa-solid fa-square-check me-1"></i>&nbsp;Avail Awesome Discounts</li>
+          </ul>
+        </div>
+      </div>
+        <div class="col">
+          <img class="img-fluid my-4" src="{% static 'icons/logo.jpg' %}" alt="logo">
+          <p>Education and knowledge are the most powerful weapon one can have…whether you are rich or poor, weak or strong…what you need is just the treasure of knowledge to defeat and overcome the problems of your life!!</p>
+      </div>
+    </div>
+</div>
+</div>
+<div class="container">
+  <div class="row my-4">
+    <h2 class="text-center text-default">Stay Updated With {{site_name}}!!!</h2>
+    <div class="col-md-3"></div>
+    <div class="col-md-6">
+      <div class="input-group mb-2 mt-4">
+        <p class="text-center text-default">Get guide from us and learn everything you want to know about overseas education.</p>
+        <input type="email" class="form-control border border-2 border-default" placeholder="Enter Your Email!!" style="height: 50px;">
+        <button class="btn btn-default px-4" type="submit"> submit </button>
+      </div>
+    </div>
+    <div class="col-md-3"></div>
+  </div> 
+</div>

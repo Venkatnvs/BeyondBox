@@ -1,0 +1,71 @@
+{% extends 'ctm_admin/base/index.html' %}
+
+{% block title %}
+Contact Messages Details | {{site_name}} Admin
+{% endblock title %}
+
+{% block content %}
+<div class="row">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-header py-2">
+        <h3>Edit Contact Us Message</h3>
+      </div>
+      <div class="card-body pt-1">
+        <form method="post">
+          {% csrf_token %}
+          {% for field in form %}
+                    {% if field.field.widget.input_type == 'checkbox' %}
+                    <div class="mt-2 form-check form-switch">
+                      {{field.label_tag}}
+                      <span><small>{{field.help_text}}</small></span>
+                      <input {% if field.field.widget.attrs.readonly %} readonly {% endif %} type="{{field.field.widget.input_type}}" id="id_{{field.name}}" name="{{field.name}}" class="form-check-input" {% if field.value == True %}checked{% endif %}>
+                        {% if field.errors %}
+                        <div class="alert alert-danger m-0 p-0">{{field.errors}}</div>
+                        {% endif %}
+                    </div>
+                    {% else %}
+                    <div class="mt-2 form-group">
+                        {{field.label_tag}}
+                        <input {% if field.field.widget.attrs.readonly %} readonly {% endif %} required type="{{field.field.widget.input_type}}" value="{{field.value}}" id="id_{{field.name}}" name="{{field.name}}" class="form-control" {% if field.field.widget.attrs.placeholder %} placeholder="{{ field.field.widget.attrs.placeholder }}"{% endif %}>
+                        <span><small>{{field.help_text}}</small></span>
+                        {% if field.errors %}
+                        <div class="alert alert-danger m-0 p-0">{{field.errors}}</div>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+          <button type="submit" class="btn btn-success w-100 my-2">Save</button>
+        </form>
+        <a href="{% url 'ctm_admin-contactus_list' %}" class="btn btn-secondary w-100">Cancel</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/intlTelInput.min.js"></script>
+<script>
+    const input = document.querySelector("#id_phone_no");
+    window.intlTelInput(input, {
+        separateDialCode: true,
+        hiddenInput: "phone_no",
+        nationalMode: false, 
+        preferredCountries: ["in"],
+        initialCountry: "auto",
+        geoIpLookup: callback => {
+            fetch("https://ipapi.co/json")
+              .then(res => res.json())
+              .then(data => callback(data.country_code))
+              .catch(() => callback("in"));
+        },
+        utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/utils.js",
+      });
+</script>
+{% endblock scripts %}
+
+
+{% block styles %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/css/intlTelInput.css">
+{% endblock styles %}

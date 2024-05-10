@@ -1,0 +1,81 @@
+{% extends 'base/index.html' %}
+{% load static %}
+{% load cmutils %}
+
+{% block title %}
+Cost Of Studing In NEW ZEALAND | {{site_name}}
+{% endblock title %}
+
+{% block styles %}
+<style>
+    .container-bd {
+        font-family: 'Arial', sans-serif;
+        line-height: 1.6;
+    }
+    .container-bd p {
+        color: #4f4f4f;
+        font-size: 16px;
+        font-weight: 500;
+    }
+    table, th, td {
+        border:1px solid blueviolet;
+    }
+</style>
+{% endblock styles %}
+
+{% block content %}
+<div class="row pt-3">
+    <h2 class="text-center bg-white shadow-sm py-1 bg-opacity-75 text-dark fw-bold border border-default border-2 rounded-pill">COST OF STUDYING IN NEW ZEALAND</h2>
+    <div class="container-bd mt-4 px-4">
+        <p>Students prefer to study in New Zealand due to its globally recognized institutions,internationally recognized qualifications and employability.There is an abundance of research opportunities for international students in New Zeleand.The cost of living in New Zealand is lower than the cost of living in Australia.For exact fee details, you are advised to check the official webpage of that particular institution and course.</p>
+
+        <div class="row my-1 d-flex justify-content-center border border-default">
+            <h6 class="text-center fw-bold my-1">Ads</h6>
+            {{ad | GetAd_size:'500x400' | safe}}
+        </div>
+        
+        <h2>Cost of Undergraduate And Postgraduate Degree in New Zealand</h2>
+        <p>The cost of Undergraduate Degree for International Students in New Zeleand varies between NZD 22,000 to NZD 32,000 per year.
+        </p>
+        <p>The cost of Postgraduate Degree for International Students in New Zeleand varies between NZD 26,000 to NZD 37,000 per year.</p>
+
+        <h2>Popular Universities in New Zealand</h2>
+        <table class="my-2 mb-5 table table-striped table-hover" style="width:100%">
+            <thead class="table-default">
+                <tr>
+                    <th>Universities</th>
+                    <th>Popular Courses Offered</th>
+                    <th>Location</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>University of Auckland</td>
+                    <td>M.S Data Science,BEng</td>
+                    <td>Auckland, North Island</td>
+                </tr>
+                <tr>
+                    <td>University of Otago</td>
+                    <td>Master of public health, data science</td>
+                    <td>Dunedin</td>
+                </tr>
+                <tr>
+                    <td>Victoria University of Wellington</td>
+                    <td>Masters of computer science, professional accounting</td>
+                    <td>Wellington</td>
+                </tr>
+                <tr>
+                    <td>Auckland University of Technology</td>
+                    <td>Master of creative technologies, construction management</td>
+                    <td>Auckland</td>
+                </tr>
+        </tbody>
+        </table>
+
+    <div class="row my-1 d-flex justify-content-center border border-default">
+        <h6 class="text-center fw-bold my-1">Ads</h6>
+        {{ad | GetAd_size:'500x400' | safe}}
+        {{ad | GetAd_size:'300x200' | safe}}
+      </div>
+</div>
+{% endblock content %}

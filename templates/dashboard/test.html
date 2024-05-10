@@ -1,0 +1,42 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Virtual Campus Tour</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+</head>
+
+<body>
+
+    <a-scene keyboard-shortcuts="enterVR: false">
+
+        <!-- Camera and Controls -->
+        <a-entity position="0 1.6 5">
+            <a-camera look-controls wasd-controls></a-camera>
+        </a-entity>
+
+        <!-- Photo 1 -->
+        <a-sky id="photo1" src="{% static 'applies/img/11.jpg' %}" rotation="0 -90 0"></a-sky>
+
+        <!-- Photo 2 -->
+        <a-sky id="photo2" src="{% static 'applies/img/B.jpg' %}" rotation="0 90 0" visible="false"></a-sky>
+
+        <a-entity position="5 6 0">
+            <a-text value="DSU Campus" align="center" wrap-count="20"></a-text>
+            <a-plane color="#6173F4" height="1.5" width="3" href="###"></a-plane>
+        </a-entity>
+
+        <a-entity position="-5 6 0">
+            <a-text value="Welcome to Virtual Campus Tour" align="center" wrap-count="20"></a-text>
+            <a-plane color="#4CAF50" height="2" width="4"></a-plane>
+        </a-entity>
+
+    </a-scene>
+
+</body>
+
+</html>

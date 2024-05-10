@@ -1,0 +1,52 @@
+{% extends 'ctm_admin/base/index.html' %}
+
+{% block title %}
+Ads System | {{site_name}} Admin
+{% endblock title %}
+
+{% block content %}
+<h2>Ad Details</h2>
+<div class="row">
+  <div class="col-md-4">
+    <div class="card">
+      <div class="card-header py-2">
+        <h5>Ad Image Preview</h5>
+      </div>
+      <div class="card-body pt-1">
+        {% if ad.url %}
+        <img src="{{ ad.url }}" class="img-fluid" alt="{{ ad.title }}">
+        {% else %}
+        <div class="card-img-top"
+          style="height: 200px; background-color: #eee; display: flex; align-items: center; justify-content: center;">
+          No Image
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  <div class="col-md-8">
+    <div class="card">
+      <div class="card-header py-2">
+        <h4 class="text-capitalize">{{ ad.title }}</h4>
+      </div>
+      <div class="card-body pt-1">
+        <p><span class="fw-bold">Size:</span> {{ ad.size }}</p>
+        <p><span class="fw-bold">Ad Image URL:</span> <a href="{{ ad.url }}" target="_blank">{{ ad.url }}</a></p>
+        <p><span class="fw-bold">Forward URL:</span> <a href="{{ ad.forward_url }}" target="_blank">{{ ad.forward_url }}</a></p>
+        <p class="card-text m-0"><span class="fw-bold">Last Updated:</span> {{ ad.last_updated }}</p>
+        <p class="card-text m-0"><span class="fw-bold">Created at:</span> {{ ad.created_at }}</p>
+        <div class="mt-2 form-check form-switch">
+          <label for="id_active_ad" class="fw-bold">Is Active</label>
+          <input readonly disabled type="checkbox" id="id_active_ad" class="form-check-input" {% if ad.is_active == True %}checked{% endif %}>
+        </div>
+      </div>
+      <div class="card-footer">
+        <a href="{% url 'ctm_admin-ads_edit' ad.uuid %}" class="btn btn-primary">Edit</a>
+        <a href="{% url 'ctm_admin-ads_delete' ad.uuid %}" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this ad?')">Delete</a>
+        <a href="{% url 'ctm_admin-ads-list-view' %}" class="btn btn-secondary my-2"><i class="fa-solid fa-arrow-left"></i> Back</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock content %}

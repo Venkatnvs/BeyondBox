@@ -1,0 +1,167 @@
+{% extends 'base/index.html' %}
+{% load static %}
+{% load cmutils %}
+
+{% block title %}
+    Verification | {{ site_name }}
+{% endblock title %}
+
+{% block styles %}
+<style>
+    #videoElement {
+        width: 100%;
+        max-width: 640px;
+    }
+</style>
+{% endblock styles %}
+
+{% block content %}
+<h2 class="text-center bg-white shadow-sm py-1 bg-opacity-75 text-dark fw-bold border border-default border-2 rounded-pill">
+    Verify your self</h2>
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card h-100">
+                <div class="card-body">
+                    <video id="videoElement" autoplay></video> 
+                </div>
+                <div class="card-footer text-center">
+                    <button id="startRecording" class="btn btn-default w-50 mx-auto">Start Recording</button>
+                    <button id="stopRecording" class="btn btn-default w-50 mx-auto" style="display: none;">Stop Recording</button> 
+                </div>
+                <div class="d-flex justify-content-center row my-2">
+                    {{ad | GetAd_size:'300x200' | safe}}
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 bg-default">
+            <div class="card bg-default h-100">
+                <div class="card-body mt-2">
+                    <h3 id="result_title" class="text-center text-decoration-underline">Transcription</h3>
+                    <p id="transcription">
+                        start speaking about your self .....
+                    </p>
+                    <p id="video_result"></p>
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+{% block scripts %}
+<script>
+    $(".spinner-border").hide();
+    document.getElementById('startRecording').addEventListener('click', startRecording);
+    document.getElementById('stopRecording').addEventListener('click', stopRecording);
+
+    var mediaRecorder;
+    var chunks = [];
+    var recognition = new webkitSpeechRecognition();
+    var transcript_text = '';
+    recognition.lang = 'en-US';
+    recognition.continuous = true;
+    recognition.interimResults = false;
+    
+    navigator.mediaDevices.getUserMedia({ audio:false, video: true })
+        .then(function(stream) {
+            var video = document.getElementById('videoElement');
+            video.srcObject = stream;
+
+            // Start transcription as soon as the audio stream becomes available
+            recognition.start();
+        })
+        .catch(function(err) {
+            console.log('Error: ' + err.message);
+        });
+
+    function startRecording() {
+        mediaRecorder = new MediaRecorder(videoElement.srcObject);
+
+        mediaRecorder.ondataavailable = function(e) {
+            chunks.push(e.data);
+        };
+
+        mediaRecorder.onstop = function(e) {
+            var blob = new Blob(chunks, { 'type' : 'video/mp4' });
+            const videoFile = new File([blob], 'video.mp4');
+            var formData = new FormData();
+            formData.append('video', videoFile);
+            
+            fetch('{% url "analysis-upload" %}', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Video uploaded successfully:', data);
+                const emotionList = document.getElementById('video_result');
+                emotionList.innerHTML = `
+                    <li class="list-group-item">Confidence Level: ${data.confidence_level}</li>
+                    <li class="list-group-item">Expression Counts:</li>
+                    <ul class="list-group">
+                        ${Object.entries(data.expression_counts).map(([emotion, count]) => `<li class="list-group-item">${emotion}: ${count}</li>`).join('')}
+                    </ul>
+                `;
+                $(".spinner-border").hide();
+            })
+            .catch(error => {
+                console.error('Error uploading video:', error);
+            });
+        };
+
+        mediaRecorder.start();
+        document.getElementById('startRecording').style.display = 'none';
+        document.getElementById('stopRecording').style.display = 'block';
+    }
+
+    function stopRecording() {
+        mediaRecorder.stop();
+        recognition.stop();
+        document.getElementById('startRecording').style.display = 'block';
+        document.getElementById('stopRecording').style.display = 'none';
+    }
+
+    recognition.onresult = function(event) {
+        for (let i = event.resultIndex; i < event.results.length; i++) {
+            if (event.results[i].isFinal) {
+                transcript_text += event.results[i][0].transcript + ', ';
+            }
+        }
+        document.getElementById('transcription').innerText = transcript_text;
+    };
+
+    recognition.onend = function() {
+        console.log('Speech recognition service disconnected');
+        $(".spinner-border").show();
+        fetch('{% url "analysis-audio-analysis" %}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ 'transcript': transcript_text })
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Transcription uploaded successfully:', data);
+            transcript_text = '';
+            $('#result_title').text('Result:');
+            const transcriptionList = document.getElementById('transcription');
+            transcriptionList.innerHTML = `
+                <p>Transcription: ${data.transcription}</p>
+                <li class="list-group-item">Average Sentence Length: ${data.avg_sentence_length}</li>
+                <li class="list-group-item">Average Word Length: ${data.avg_word_length}</li>
+                <li class="list-group-item">Fluency Score: ${data.fluency_score * 100}</li>
+                <li class="list-group-item">Grammar Errors:</li>
+                <ul class="list-group">
+                    ${data.grammar_errors.map(error => `<li class="list-group-item">${error}</li>`).join('')}
+                </ul>
+            `;
+        })
+    };
+</script>
+{% endblock scripts %}
+

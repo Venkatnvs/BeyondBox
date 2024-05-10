@@ -1,0 +1,57 @@
+{% extends 'ctm_admin/base/index.html' %}
+
+{% block title %}
+Ads System | {{site_name}} Admin
+{% endblock title %}
+
+
+{% block content %}
+  <div class="card">
+    <div class="card-header py-2">
+      <h2>Edit Ad</h2>
+    </div>
+    <div class="card-body">
+      <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {% for field in form %}
+                    {% if field.field.widget.input_type == 'checkbox' %}
+                    <div class="mt-2 form-check form-switch">
+                      {{field.label_tag}}
+                      <span><small>{{field.help_text}}</small></span>
+                      <input type="{{field.field.widget.input_type}}" id="id_{{field.name}}" name="{{field.name}}" class="form-check-input" {% if field.value == True %}checked{% endif %}>
+                        {% if field.errors %}
+                        <div class="alert alert-danger m-0 p-0">{{field.errors}}</div>
+                        {% endif %}
+                    </div>
+                    {% elif field.field.widget.input_type == 'select' %}
+                    <div class="mt-2 form-group">
+                        {{field.label_tag}}
+                        <select id="id_{{field.name}}" name="{{field.name}}" class="form-select">
+                            {% for id,value in field.field.choices %}
+                            <option value="{{id}}" {% if field.value == id %}selected{% endif %}>{{value}}</option>
+                            {% endfor %}
+                        </select>
+                        {% if field.errors %}
+                        <div class="alert alert-danger m-0 p-0">{{field.errors}}</div>
+                        {% endif %}
+                    </div>
+                    {% else %}
+                    <div class="mt-2 form-group">
+                        {{field.label_tag}}
+                        <input required type="{{field.field.widget.input_type}}" value="{{field.value}}" id="id_{{field.name}}" name="{{field.name}}" class="form-control" {% if field.field.widget.attrs.placeholder %} placeholder="{{ field.field.widget.attrs.placeholder }}"{% endif %}>
+                        <span><small>{{field.help_text}}</small></span>
+                        {% if field.errors %}
+                        <div class="alert alert-danger m-0 p-0">{{field.errors}}</div>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+        <button type="submit" class="btn btn-primary my-2 w-100">Save Changes</button>
+        <br>
+        <a href="{% url 'ctm_admin-ads_detail' ad.uuid %}" class="btn btn-secondary w-100 mb-2">Cancel</a>
+  <a href="{% url 'ctm_admin-ads_delete' ad.uuid %}" class="btn btn-danger w-100" onclick="return confirm('Are you sure you want to delete this ad?')">Delete</a>
+      </form>
+    </div>
+  </div>
+
+{% endblock content %}

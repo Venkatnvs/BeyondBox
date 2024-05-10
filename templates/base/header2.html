@@ -1,0 +1,59 @@
+{% load static %}
+<header id="header" class="header fixed-top bg-">
+  <div class="container-fluid container-xl d-flex align-items-center justify-content-between">
+    
+    <a href="/" class="logo d-flex align-items-center">
+      <img class="mx-0" src="{% static 'icons/icon.jpg' %}" alt="logo"/>
+      <img style="margin-left:10px" src="{% static 'icons/logo-white.png' %}" alt="logo"/>
+      <span class="d-none">{{site_name}}</span>
+    </a>
+    
+    <nav id="navbar" class="navbar">
+      <ul>
+          <li><a class="nav-link" href="{% url 'analysis-index' %}">Get Verified</a></li>
+          <li class="dropdown"><a href="#"><span>Traning</span> <i class="bi bi-chevron-down"></i></a>
+            <ul>
+              <li><a href="{% url 'dashboard-aptitude-test' %}">Aptitude Traning</a></li>
+              <li><a href="{% url 'dashboard-soft-skills-test' %}">Soft Skill Traning</a></li>
+            </ul>
+          </li>
+          <li><a class="nav-link" href="{% url 'dashboard-life-skills' %}">Life Skills</a></li>
+          <li class="dropdown"><a href="{% url 'applies-courses' %}"><span>Study Abroad</span> <i class="bi bi-chevron-down"></i></a>
+            <ul>
+              <li><a class="nav-link" href="{% url 'applies-courses' %}">Courses</a></li>
+            <li class="dropdown"><a href="{% url 'applies-courses' %}"><span>Cost of Study</span> <i class="bi bi-chevron-right"></i></a>
+            <ul>
+              <li><a href="{% url 'cost-of-study-usa' %}">usa</a></li>
+              <li class="dropdown"><a href="#"><span>Europe</span> <i class="bi bi-chevron-right"></i></a>
+                <ul>
+                  <li><a href="#">Ireland</a></li>
+                  <li><a href="#">Germany</a></li>
+                  <li><a href="#">France</a></li>
+                  <li><a href="#">Netherlands</a></li>
+                  <li><a href="#">Italy</a></li>
+                  <li><a href="#">Sweden</a></li>
+                </ul>
+              </li>
+              <li><a href="{% url 'cost-of-study-uk' %}">Uk</a></li>
+              <li><a href="{% url 'cost-of-study-new-zealand' %}">New zealand</a></li>
+              <li><a href="{% url 'cost-of-study-canada' %}">canada</a></li>
+              <li><a href="#">Asia</a></li>
+              <li><a href="{% url 'cost-of-study-australia' %}">Australia</a></li>
+            </ul>
+            </li>
+          </ul>
+          </li>
+          <li><a class="nav-link" href="{% url 'dashboard-about' %}">About</a></li>
+          <li><a class="nav-link" href="{% url 'utils-contact-us' %}">Contact</a></li>
+          {% if request.user.is_authenticated %}
+            {% include 'base/_details/profile_on_login.html' %}
+          {% else %}
+            <li><a href="{% url 'accounts-login' %}" class="header_lr_btn_login btn btn-outline-light">Login</a></li>
+            <li><a href="{% url 'accounts-register' %}" class="header_lr_btn_reg btn btn-light text-default">SignUp</a></li>
+            {% endif %}
+        </ul>
+        
+        <i class="bi bi-list mobile-nav-toggle"></i>
+      </nav>
+    </div>
+  </header>

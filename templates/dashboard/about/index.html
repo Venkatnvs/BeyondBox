@@ -1,0 +1,35 @@
+{% extends 'base/index.html' %}
+{% load static %}
+{% load cmutils %}
+
+{% block title %}
+About | {{site_name}}
+{% endblock title %}
+
+{% block content %}
+<div class="row pt-3">
+    <h2
+        class="text-center bg-white shadow-sm py-1 bg-opacity-75 text-dark fw-bold border border-default border-2 rounded-pill">
+        About</h2>
+    <div class="container-bd mt-4 px-4">
+        <p>The employability gap among Indian graduates, where 36% remain unplaced, underscores a need for enhanced soft skills. To tackle this, reaction-based training sessions encourage students to articulate responses to hypothetical situations, fostering swift decision-making. Aptitude training sharpens reasoning abilities via brainstorming and graph analysis. By employing machine learning, real-time analysis evaluates spoken language fluency and confidence levels. This holistic approach not only boosts employability but also readies students for international study opportunities, thus bridging the global skills gap and ensuring competitiveness in an interconnected world.</p>
+        <P>We’re a bunch of Academic Professors, skill experts, industry mentors from reputed Universities/ Institutions / organizations from different countries, helping students to achieve their academic dreams with desired domain areas, skills and Qualifications.</p>
+        <p>
+            We're on a big mission to teach everyone! Our goal is to help people everywhere learn new things. Join us on this exciting adventure as we make learning easy and fun. Together, let's explore and discover the amazing world of knowledge.
+        </p>
+
+   
+        <div class="row my-1 d-flex justify-content-center border border-default">
+            <h6 class="text-center fw-bold my-1">Ads</h6>
+            {{ad | GetAd_size:'500x400' | safe}}
+            {{ad | GetAd_size:'300x200' | safe}}
+          </div>
+    
+
+    <p>With years of experience and a high visa success rate, {{site_name}} is the preferred choice for students seeking reliable visa assistance. We understand the importance of a smooth visa process in realizing your dream of studying abroad. Once your visa is issued, we ensure timely delivery, allowing you to prepare for your move well in advance.</p>
+
+    <p>Trust us to make your international education journey seamless and stress-free.</p>
+
+    </div>
+</div>
+{% endblock content %}

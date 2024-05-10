@@ -1,0 +1,68 @@
+{% extends 'base/index.html' %}
+{% load static %}
+{% load cmutils %}
+
+{% block title %}
+Home | {{site_name}}
+{% endblock title %}
+
+{% block content %}
+{% if request.user.is_authenticated %}
+{% include 'dashboard/thankyou.html' %}
+{% else %}
+{% include 'dashboard/main.html' %}
+{% endif %}
+{% endblock content %}
+
+{% block styles %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.min.css" />
+<style>
+  .study_cnt_slide img {
+    width: 100%%;
+    min-height: 300px;
+    max-height: 400px;
+    object-fit:contain;
+    aspect-ratio: 3/2;
+  }
+  .container{
+    max-width: 100%;
+    padding: 20px;
+  }
+  .box-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 40px;
+    padding: 18px;
+    justify-content: center;
+  }
+  .card {
+    border: 1px solid #ddd; 
+    border-radius: 10px;
+    padding: 20px;
+  }
+  .slick-prev::before, .slick-next::before {
+  color: #660076 !important;
+  }
+  .study_cnt_slide, .withOptions{
+    margin: 0 25px;
+  }
+</style>
+{% endblock styles %}
+
+{% block scripts %}
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
+  <script type="text/javascript">
+    $(document).ready(function(){
+      $('.study_cnt_slide').slick({
+          infinite: true,
+          slidesToShow: 1,
+          slidesToScroll: 1,
+          autoplay: true,
+          autoplaySpeed: 2000, 
+          dots: true,
+          arrows: true
+      });
+  });
+  </script>
+{% endblock scripts %}

@@ -1,0 +1,91 @@
+{% extends 'base/index.html' %}
+{% load static %}
+{% load cmutils %}
+
+{% block title %}
+Cost Of Studing In CANADA | {{site_name}}
+{% endblock title %}
+
+{% block styles %}
+<style>
+    .container-bd {
+        font-family: 'Arial', sans-serif;
+        line-height: 1.6;
+    }
+    .container-bd p {
+        color: #4f4f4f;
+        font-size: 16px;
+        font-weight: 500;
+    }
+    table, th, td {
+        border:1px solid blueviolet;
+    }
+</style>
+{% endblock styles %}
+
+{% block content %}
+<div class="row pt-3">
+    <h2 class="text-center bg-white shadow-sm py-1 bg-opacity-75 text-dark fw-bold border border-default border-2 rounded-pill">COST OF STUDYING IN CANADA</h2>
+    <div class="container-bd mt-4 px-4">
+        <p>Canada is attracting international students from all around the globe due to its high-quality education and research opportunities.Canada offers much more affordable education than other countries like the US and UK.Canada is considered to be the most student-friendly country due to its affordable costs, high standard of living and its hassle free visa application process.Studying and accomodation costs between 38,000 to 39,000 CAD per year for an international student.For exact fee details,you can check the official webpage of that particular university and course.</p>
+
+        <div class="row my-1 d-flex justify-content-center border border-default">
+            <h6 class="text-center fw-bold my-1">Ads</h6>
+            {{ad | GetAd_size:'500x400' | safe}}
+        </div>
+        
+        <h2>Cost of Undergraduate And Postgraduate Degree in Canada</h2>
+        <p>The average cost of Undergraduate Degree for International Students in Canada is CAD 6,800 per year.
+        </p>
+        <p>The average cost of Postgraduate Degree for International Students in Canada is CAD 21,100 per year.</p>
+
+        <h2>Popular Universities in Canada</h2>
+        <table class="my-2 mb-5 table table-striped table-hover" style="width:100%">
+            <thead class="table-default">
+                <tr>
+                    <th>Universities</th>
+                    <th>Popular Courses Offered</th>
+                    <th>Location</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>University of Toronto</td>
+                    <td>MBA,MS in Computer Science</td>
+                    <td>Toronto,Ontario</td>
+                </tr>
+                <tr>
+                    <td>The University of British Columbia</td>
+                    <td>MBA,MSc Computer Science,MEng Electrical Engineering</td>
+                    <td>Vancouver, British Columbia</td>
+                </tr>
+                <tr>
+                    <td>University of Waterloo</td>
+                    <td>Bachelor of Computer Science,MEng in Electrical and Computer Engineering</td>
+                    <td>Waterloo, Ontario</td>
+                </tr>
+                <tr>
+                    <td>University of Montreal</td>
+                    <td>MBA,MS in Computer Science,MEng in Electrical Engineering</td>
+                    <td>Montreal, Quebec</td>
+                </tr>
+                <tr>
+                    <td>University of Calgary</td>
+                    <td>MBA,MEng,MSc Computer Science</td>
+                    <td>Calgary, Alberta</td>
+                </tr>
+                <tr>
+                    <td>University of Alberta</td>
+                    <td>MBA,MS Chemical Engineering,MS Electrical and Computer Engineering</td>
+                    <td>Edmonton, Alberta</td>
+                </tr>
+        </tbody>
+        </table>
+
+    <div class="row my-1 d-flex justify-content-center border border-default">
+        <h6 class="text-center fw-bold my-1">Ads</h6>
+        {{ad | GetAd_size:'500x400' | safe}}
+        {{ad | GetAd_size:'300x200' | safe}}
+      </div>
+</div>
+{% endblock content %}

@@ -1,0 +1,21 @@
+{% extends 'ctm_admin/base/index.html' %}
+
+{% block title %}
+Ads System | {{site_name}} Admin
+{% endblock title %}
+
+{% block content %}
+<div class="card">
+  <div class="card-header py-2">
+      <h2>Delete Ad</h2>
+    </div>
+    <div class="card-body pt-1">
+      <p>Are you sure you want to delete "<span class="fw-bold">{{ ad.title }}</span>" ?</p>
+      <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Yes, delete</button>
+        <a href="{% url 'ctm_admin-ads_detail' ad.uuid %}" class="btn btn-secondary">Cancel</a>
+      </form>
+    </div>
+  </div>
+{% endblock content %}

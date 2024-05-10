@@ -1,0 +1,26 @@
+<div class="row mt-1">
+    <label class="col-sm-3 col-form-label" for="inputusn_no">USN No. <span class="text-danger">*</span></label>
+    <div class="col-sm-9">
+      <input required type="text" name="usn_no" placeholder="Usn Number" maxlength="15" class="form-control"
+      id="inputusn_no" value="{{ FieldValues.usn_no }}" />
+    </div>
+  </div>
+  
+  <div class="row mt-1">
+    <label class="col-sm-3 col-form-label" for="inputcollege">College <span class="text-danger">*</span></label>
+    <div class="col-sm-9">
+      <select id="inputcollege" name="college" class="form-select" required>
+        {% if FieldValues.college %}
+          <option selected>{{FieldValues.college}}</option>
+        {% endif %}
+      </select>
+    </div>
+  </div>
+
+  <div class="row mt-1">
+    <label class="col-sm-3 col-form-label" for="inputgraduation">Graduation Year <span class="text-danger">*</span></label>
+    <div class="col-sm-9">
+      <input required type="number" min="2000" max="2099" step="1" name="graduation" placeholder="Year" maxlength="15" class="form-control"
+      id="inputgraduation" value="{{ FieldValues.graduation }}" />
+    </div>
+  </div>

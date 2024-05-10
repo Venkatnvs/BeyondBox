@@ -1,0 +1,58 @@
+{% extends 'ctm_admin/base/index.html' %}
+
+{% block title %}
+Update UserType | {{site_name}} Admin
+{% endblock title %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header py-2">
+        <h2>Update UserType</h2>
+    </div>
+    <div class="card-body pt-1">
+        <form method="post">
+            {% csrf_token %}
+            {% for field in form %}
+            {% if field.field.widget.input_type == 'select' %}
+            <div class="mt-2 form-group">
+                {{field.label_tag}}
+                <span><small class="text-gray text-xs">{{field.help_text}}</small></span>
+                <select multiple id="id_{{field.name}}" size="8" name="{{field.name}}" class="form-select">
+                    {% for codename,value,id in field.field.choices %}
+                    <option value="{{id}}" {% if id in field.value %}selected{% endif %}>{{value}}</option>
+                    {% endfor %}
+                </select>
+                {% if field.errors %}
+                <div class="alert alert-danger m-0 p-0">{{field.errors}}</div>
+                {% endif %}
+            </div>
+            {% else %}
+            <div class="mt-2 form-group">
+                {{field.label_tag}}
+                <input required type="{{field.field.widget.input_type}}" value="{{field.value}}" id="id_{{field.name}}" name="{{field.name}}" class="form-control" {% if field.field.widget.attrs.placeholder %} placeholder="{{ field.field.widget.attrs.placeholder }}"{% endif %}>
+                <span><small>{{field.help_text}}</small></span>
+                {% if field.errors %}
+                <div class="alert alert-danger m-0 p-0">{{field.errors}}</div>
+                {% endif %}
+            </div>
+            {% endif %}
+            {% endfor %}
+            <button type="submit" class="btn btn-success mt-3 mb-2 w-100">Save</button>
+        </form>
+        <a href="{% url 'ctm_admin-usertype_list' %}" class="btn btn-secondary w-100">Cancel</a>
+    </div>
+</div>
+{% endblock content %}
+
+{% block scripts %}
+<script>
+    $(document).ready(function() {
+      $('#id_permissions').select2({
+            theme: 'bootstrap-5',
+            allowClear: true,
+            placeholder: 'Select all the permissions Granted',
+            minimumResultsForSearch: "Infinity"
+        });
+    });
+  </script>
+{% endblock scripts %}

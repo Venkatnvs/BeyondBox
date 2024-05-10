@@ -1,0 +1,138 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" class="light-style">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>
+        {% block title %}
+        {% endblock title %}
+    </title>
+    <link href="{% static 'icons/favicon.png' %}" rel="icon">
+    <link href="{% static 'icons/apple-touch-icon.png' %}" rel="apple-touch-icon">
+    <link href="{% static 'icons/favicon.ico' %}" rel="icon">
+    <link href="https://fonts.gstatic.com" rel="preconnect">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" >
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.full.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" />
+    <link href="{% static 'main/css/toastr.css' %}" rel="stylesheet"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="{% static 'main/css/chatbot.css' %}" rel="stylesheet"/>
+    <link href="{% static 'main/css/main.css' %}" rel="stylesheet"/>
+    <link href="{% static 'main/css/styles.css' %}" rel="stylesheet"/>
+    {% include 'base/_details/topscript.html' %}
+    {% block scripts_top %}
+
+    {% endblock scripts_top %}
+    <script>
+      toastr.options = {
+          "positionClass": "toast-top-right",
+          "closeButton": true,
+          "progressBar": true,
+          "newestOnTop": true,
+          "showEasing": "swing",
+          "hideEasing": "linear",
+          "showMethod": "fadeIn",
+          "hideMethod": "fadeOut",
+          "showDuration": 400,
+          "hideDuration": 200,
+          "timeOut": 10000,
+          "extendedTimeOut": 10000,
+          "tapToDismiss": false
+      };
+  </script>
+    {% block styles %}
+    {% endblock styles %}
+    <style>
+      #hero-canvas {
+        display: block;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -2;
+      }
+    </style>
+</head>
+
+<body>
+  <canvas id="hero-canvas"></canvas>
+  {% include 'base/header2.html' %}
+  {% block body_hidden %}
+
+  {% endblock body_hidden %}
+  {% include 'base/chatbot.html' %}
+  <main id="main" class="main p-0">
+    <div class="container mb-5">
+      {% include 'base/messages.html' %}
+      {% block content %}
+      
+      
+      
+      
+      {% endblock content %}
+    </div>
+  </main>
+  <div id="preloader"></div>
+  {% include 'base/footer.html' %}
+  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+  <script src="{% static 'main/js/main.js' %}"></script>
+  <script src="{% static 'main/js/added_main.js' %}"></script>
+  <script src="{% static 'main/js/ads_refresh.js' %}"></script>
+  {% block scripts %}
+
+  {% endblock scripts %}
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/128/OrbitControls.min.js"></script>
+<script>
+
+    // Three.js background for the hero section
+    const heroScene = new THREE.Scene();
+    const heroCamera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    const heroRenderer = new THREE.WebGLRenderer({ canvas: document.getElementById('hero-canvas'), antialias: true });
+    heroRenderer.setSize(window.innerWidth, window.innerHeight);
+    heroRenderer.setClearColor(0xffffff);
+
+    const starsGeometry = new THREE.BufferGeometry();
+    const starsMaterial = new THREE.PointsMaterial({ color: 0x660086, size: 1 });
+    const starsVertices = [];
+    for (let i = 0; i < 15000; i++) {
+        const x = (Math.random() - 0.5) * 1800;
+        const y = (Math.random() - 0.5) * 1800;
+        const z = -Math.random() * 1800;
+        starsVertices.push(x, y, z);
+    }
+    starsGeometry.setAttribute('position', new THREE.Float32BufferAttribute(starsVertices, 3));
+    const stars = new THREE.Points(starsGeometry, starsMaterial);
+    heroScene.add(stars);
+
+    heroCamera.position.z = 100;
+
+    const animate = function () {
+        requestAnimationFrame(animate);
+
+        stars.rotation.x += 0.0006;
+        stars.rotation.y += 0.0006;
+
+        heroRenderer.render(heroScene, heroCamera);
+    };
+
+    animate();
+</script>
+</body>
+
+</html>

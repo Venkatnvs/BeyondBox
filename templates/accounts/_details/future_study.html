@@ -1,0 +1,65 @@
+<div class="row mt-1">
+    <label class="col-sm-3 col-form-label" for="inputcountry">Country <span class="text-danger">*</span></label>
+    <div class="col-sm-9">
+      <select id="inputcountry" name="country" data-control="select2" class="form-select" required>
+        {% if FieldValues.country %}
+          <option selected>{{FieldValues.country}}</option>
+        {% endif %}
+      </select>
+    </div>
+  </div>
+
+  <div class="row mt-1">
+    <label class="col-sm-3 col-form-label" for="inputcourse">Course <span class="text-danger">*</span></label>
+    <div class="col-sm-9">
+      <select id="inputcourse" name="course" data-control="select2" class="form-select" required>
+        <option></option>
+        <option>Undergraduate</option>
+        <option>Postgraduate</option>
+        <option>PHD</option>
+        <option>Foundation</option>
+        <option>A-Level</option>
+        <option>Boarding School</option>
+        <option>Diploma</option>
+        <option>English Study (ELT/EFL)</option>
+        <option>IB</option>
+        <option>IELTS at SI-UK</option>
+        <option>IGCSE</option>
+        <option>Summer Course</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="row mt-1">
+    <label class="col-sm-3 col-form-label" for="inputcollege_preferred">Preferred College <span class="text-danger">*</span></label>
+    <div class="col-sm-9">
+      <select id="inputcollege_preferred" name="preferred_college[]" data-control="select2" class="form-select" multiple="multiple">
+        {% if preferred_college_values %}
+            {% for i in preferred_college_values %}
+                <option selected>{{i}}</option>
+            {% endfor %}
+        {% endif %}
+      </select>
+    </div>
+  </div>
+
+  <div class="row mt-1">
+    <label class="col-sm-3 col-form-label" for="inputabroad_year">Year of Study<span class="text-danger">*</span></label>
+    <div class="col-sm-9">
+      <input required type="number" min="2000" max="2099" step="1" name="abroad_year" placeholder="Year" maxlength="15" class="form-control"
+      id="inputabroad_year" value="{{ FieldValues.abroad_year }}" />
+    </div>
+  </div>
+
+  <div class="row mt-1">
+    <label class="col-sm-3 col-form-label" for="inputseason">Season <span class="text-danger">*</span></label>
+    <div class="col-sm-9">
+      <select id="inputseason" name="season" data-control="select2" class="form-select" required>
+        <option></option>
+        <option value="fall">Fall Semester</option>
+        <option value="spring">Spring Semester</option>
+        <option value="summer">Summer Semester/Trimester</option>
+        <option value="winter">Winter Semester/Trimester</option>
+      </select>
+    </div>
+  </div>

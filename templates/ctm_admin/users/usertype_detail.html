@@ -1,0 +1,28 @@
+{% extends 'ctm_admin/base/index.html' %}
+
+{% block title %}
+Details UserType | {{site_name}} Admin
+{% endblock title %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header py-2">
+        <h2>User Type Details</h2>
+    </div>
+    <div class="card-body pt-1">
+        <p><span class="fw-bold">Name:</span> {{ usertype.name }}</p>
+        <p><span class="fw-bold">Permissions:</span>
+            <ul>
+                {% for permission in usertype.permissions.all %}
+                <li>{{ permission }}</li>
+                {% endfor %}
+            </ul>
+        </p>
+    </div>
+    <div class="card-footer">
+        <a href="{% url 'ctm_admin-usertype_edit' pk=usertype.pk %}" class="btn btn-primary">Edit</a>
+        <a href="{% url 'ctm_admin-usertype_delete' pk=usertype.pk %}" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this user type?')">Delete</a>
+        <a href="{% url 'ctm_admin-usertype_list' %}" class="btn btn-secondary"><i class="fa-solid fa-arrow-left"></i> Back to List</a>
+    </div>
+</div>
+{% endblock content %}

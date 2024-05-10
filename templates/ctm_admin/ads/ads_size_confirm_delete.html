@@ -1,0 +1,21 @@
+{% extends 'ctm_admin/base/index.html' %}
+
+{% block title %}
+Ads Size System | {{site_name}} Admin
+{% endblock title %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header py-2">
+        <h2>Delete Ad Size</h2>
+    </div>
+    <div class="card-body pt-1">
+        <p>Are you sure you want to delete all Ads of "<span class="fw-bold">{{ size }}</span>" size ?</p>
+        <form method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">Yes, delete</button>
+            <a href="{% url 'ctm_admin-ads_size_list_create' %}" class="btn btn-secondary">Cancel</a>
+        </form>
+    </div>
+  </div>
+{% endblock content %}

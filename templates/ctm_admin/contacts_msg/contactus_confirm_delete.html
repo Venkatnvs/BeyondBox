@@ -1,0 +1,25 @@
+{% extends 'ctm_admin/base/index.html' %}
+
+{% block title %}
+Contact Messages Delete | {{site_name}} Admin
+{% endblock title %}
+
+{% block content %}
+<div class="row">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-header py-2">
+        <h2>Delete Contact Us Message</h2>
+      </div>
+      <div class="card-body pt-1">
+        <p>Are you sure you want to delete "<span class="fw-bold">{{ contact.name }} - {{ contact.email }}</span>" contact ?</p>
+        <form method="post">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-danger">Yes, delete</button>
+          <a href="{% url 'ctm_admin-contactus_detail' pk=contact.pk %}" class="btn btn-secondary">Cancel</a>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}

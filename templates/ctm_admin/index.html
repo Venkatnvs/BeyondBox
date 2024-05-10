@@ -1,0 +1,100 @@
+{% extends 'ctm_admin/base/index.html' %}
+{% load cmutils %}
+
+{% block title %}
+Dashboard | {{site_name}} Admin
+{% endblock title %}
+
+{% block content %}
+<h2>Dashboard</h2>
+<div class="col-md-10">
+    <div class="row">
+        <div class="col-md-4">
+            {% include 'ctm_admin/_details/get_dashboard_card.html' with title="User Registrations" count=user_count color="default" icon="fa-user-plus" %}
+        </div>
+        {% if user|has_permissions:'accounts.view_customuser' %}
+        <div class="col-md-4">
+            {% include 'ctm_admin/_details/get_dashboard_card.html' with title="Staff Users" count=staffuser_count color="primary" icon="fa-user-gear" %}
+        </div>
+        {% endif %}
+        {% if user|has_permissions:'utils.view_contactus' %}
+        <div class="col-md-4">
+            {% include 'ctm_admin/_details/get_dashboard_card.html' with title="Contacts Messages" count=contact_msg_count color="warning" icon="fa-comments" %}
+        </div>
+        {% endif %}
+        {% if user|has_permissions:'ads.view_adsbase' %}
+        <div class="col-md-4">
+            {% include 'ctm_admin/_details/get_dashboard_card.html' with title="Active Ads" count=ads_count color="success" icon="fa-bullhorn" %}
+        </div>
+        {% endif %}
+    </div>
+    <div class="row justify-content-center d-flex">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <span>Users Based on Preferred Country</span>
+                </div>
+                <div class="card-body">
+                    <canvas id="countryChart" width="400" height="200"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 ">
+            <div class="card">
+                <div class="card-header">
+                    <span>Users Based on Date</span>
+                </div>
+                <div class="card-body">
+                    <canvas id="monthlyChart" width="400" height="200"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+
+
+{% block scripts %}
+<script>
+    var countryData = {{ graphs_1|safe }};
+    var monthlyData = {{ graphs_2|safe }};
+
+    var countryChartCanvas = document.getElementById('countryChart').getContext('2d');
+    var countryChart = new Chart(countryChartCanvas, {
+        type: 'bar',
+        data: {
+            labels: countryData.map(entry => entry.country),
+            datasets: [{
+                label: 'User Count',
+                data: countryData.map(entry => entry.count),
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1
+            }]
+        }
+    });
+
+    var monthlyChartCanvas = document.getElementById('monthlyChart').getContext('2d');
+    var monthlyChart = new Chart(monthlyChartCanvas, {
+        type: 'line',
+        data: {
+            labels: monthlyData.map(entry => {
+                return new Intl.DateTimeFormat('en-US', {
+                    year: 'numeric',
+                    month: 'long',
+                    timeZone: 'UTC'
+                }).format(new Date(entry.month));
+            }),
+            datasets: [{
+                label: 'User Count',
+                data: monthlyData.map(entry => entry.count),
+                fill: false,
+                borderColor: 'rgba(255, 99, 132, 1)',
+                borderWidth: 2
+            }]
+        }
+    });
+</script>
+{% endblock scripts %}
+    

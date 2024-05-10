@@ -1,0 +1,87 @@
+{% extends 'base/index.html' %}
+{% load static %}
+{% load cmutils %}
+
+{% block title %}
+Cost Of Studing In UK | {{site_name}}
+{% endblock title %}
+
+{% block styles %}
+<style>
+    .container-bd {
+        font-family: 'Arial', sans-serif;
+        line-height: 1.6;
+    }
+    .container-bd p {
+        color: #4f4f4f;
+        font-size: 16px;
+        font-weight: 500;
+    }
+    table, th, td {
+        border:1px solid blueviolet;
+    }
+</style>
+{% endblock styles %}
+
+{% block content %}
+<div class="row pt-3">
+    <h2 class="text-center bg-white shadow-sm py-1 bg-opacity-75 text-dark fw-bold border border-default border-2 rounded-pill">COST OF STUDYING IN UK</h2>
+    <div class="container-bd mt-4 px-4">
+        <p>The United Kingdom is a top choice among international students due to the presence of internationally recognised universities,availability of various courses,job opportunities,scholarships,etc.The cost of studying in the UK for international students varies depends on the university, course, and location.The cost of studying at UK universities varies between £8,000 to £38,000 anually.For exact fee details,you can check the official webpage of that particular university and course.</p>
+
+        <div class="row my-1 d-flex justify-content-center border border-default">
+            <h6 class="text-center fw-bold my-1">Ads</h6>
+            {{ad | GetAd_size:'500x400' | safe}}
+        </div>
+        
+        <h2>Cost of Undergraduate And Postgraduate Degree in UK</h2>
+        <p>Cost of Undergraduate Degree for International Students in UK varies between £11,400 to £38,000 per year.
+        </p>
+        <p>Cost of Postgraduate Degree for International Students in UK varies between £9,000 to £30,000 per year.This
+            depends on the university and course.</p>
+
+        <h2>Popular Universities in Uk</h2>
+        <table class="my-2 mb-5 table table-striped table-hover" style="width:100%">
+            <thead class="table-default">
+                <tr>
+                    <th>Universities</th>
+                    <th>Popular Courses Offered</th>
+                    <th>Location</th>
+                </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>University of Oxford</td>
+                <td>MBA,M.Sc Computer Science,M.Sc Mathematics</td>
+                <td>Oxford</td>
+            </tr>
+            <tr>
+                <td>University of Cambridge</td>
+                <td>MBA,B.Eng,LLM</td>
+                <td>Cambridge</td>
+            </tr>
+            <tr>
+                <td>The University of Manchester</td>
+                <td>M.Eng,MBA,M.Sc Computer Science</td>
+                <td>Manchester</td>
+            </tr>
+            <tr>
+                <td>University College London</td>
+                <td>M.S,B.Sc,M.A,B.A,M.Phil</td>
+                <td>London</td>
+            </tr>
+            <tr>
+                <td>The University of Edinburgh</td>
+                <td>MBA,MS in Computer Scienece</td>
+                <td>Edinburgh</td>
+            </tr>
+        </tbody>
+        </table>
+
+    <div class="row my-1 d-flex justify-content-center border border-default">
+        <h6 class="text-center fw-bold my-1">Ads</h6>
+        {{ad | GetAd_size:'500x400' | safe}}
+        {{ad | GetAd_size:'300x200' | safe}}
+      </div>
+</div>
+{% endblock content %}

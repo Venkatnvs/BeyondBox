@@ -1,0 +1,63 @@
+{% extends 'base/index.html' %}
+{% load static %}
+
+{% block title %}
+Courses | {{site_name}}
+{% endblock title %}
+
+{% block styles %}
+<style>
+    .container1 .box-container1{
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap:15px;
+    }
+    .container1 .box-container1 .box{
+        box-shadow: 0 5px 10px rgb(57, 2, 86,0.2);
+        background-color: #72239c;
+        border-radius: 2px;
+        text-align: center;
+        padding:30px 0px;
+    }
+    .container1 .box-container1 .box h2{
+        color:white;
+        line-height: 1.8;
+        font-weight: 500;
+        font-size: 26px;
+        text-transform: uppercase;
+    }
+    .container1 .box-container1 .box p{
+        color:#d6d6d6;
+        line-height: 1.8;
+    }
+    .container1 .box-container1 .box .btn:hover{
+        letter-spacing: 1px;
+    }
+    .container1 .box-container1 .box:hover{
+        box-shadow: 0 10px 15px rgb(57, 2, 86,0.3);
+        transform: scale(1.02);
+    }
+    @media (max-width:768px){
+        .container1{
+            padding:20px !important;
+        }
+    }
+</style>
+{% endblock styles %}
+
+
+{% block content %}
+<div id="main-cc" class="container1 pt-3 px-5 pb-2">
+<h1 class="text-default fw-semibold text-center pb-2">Study Abroad</h1>
+    <div class="box-container1">
+        {% for i in data %}
+        <div class="box">
+            <h2>Study in {{i.country}}</h2>
+            <p>{{i.description}}</p>
+            <p>{{i.timeline | safe}}</p>
+            <a href="{% url 'applies-courses-apply' i.pk %}" class="btn btn-default-dark">Apply Now</a>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock content %}

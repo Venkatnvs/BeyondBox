@@ -1,0 +1,89 @@
+{% extends 'base/index.html' %}
+{% load static %}
+{% load cmutils %}
+
+{% block title %}
+Cost Of Studing In USA | {{site_name}}
+{% endblock title %}
+
+{% block styles %}
+<style>
+    .container-bd {
+        font-family: 'Arial', sans-serif;
+        line-height: 1.6;
+    }
+    .container-bd p {
+        color: #4f4f4f;
+        font-size: 16px;
+        font-weight: 500;
+    }
+    table, th, td {
+        border:1px solid blueviolet;
+    }
+</style>
+{% endblock styles %}
+
+{% block content %}
+<div class="row pt-3">
+    <h2 class="text-center bg-white shadow-sm py-1 bg-opacity-75 text-dark fw-bold border border-default border-2 rounded-pill">COST OF STUDYING IN USA</h2>
+    <div class="container-bd mt-4 px-4">
+        <p>The cost of studying in the USA for international students varies depending on the university, course, and location. The average tuition fee for top colleges in the US is around $50,000 per year.</p>
+
+        <h2>Tuition Fees for International Students</h2>
+        <p>The average tuition fee for top colleges in the US is around $50,000 per year, as cheaper tuition than a private college or university. Your tuition costs will vary depending on the degree program and university or school you choose.</p>
+        <div class="row my-1 d-flex justify-content-center border border-default">
+            <h6 class="text-center fw-bold my-1">Ads</h6>
+            {{ad | GetAd_size:'500x400' | safe}}
+          </div>
+        <h2>Cost of Undergraduate Degree for International Students in USA</h2>
+        <p>The cost of a four-year Bachelor's degree in the United States for international students varies depending on the institution and degree program. The average cost of a four-year Bachelor's degree for an overseas student is $30,000. Though the cost of a bachelor's degree in the USA is higher than most other study abroad destinations, when it comes to return on investment, the results are unparalleled.</p>
+
+        <h2>Cost of Masters Degree for International Students in USA</h2>
+        <p>The cost of a Master's Degree for international students in the USA ranges from $10,000 to $80,000 per year, depending on the program and university. The average tuition fee for a Master's Degree in the USA is between $20,000 to $35,000, depending on the course and universities.</p>
+
+        <h2>Universities with affordable fees in the USA</h2>
+        <table class="my-2 mb-5 table table-striped table-hover" style="width:100%">
+            <thead class="table-default">
+                <tr>
+                    <th>Top universities</th>
+                    <th>Tution Fees</th>
+                    <th>State</th>
+                </tr>
+            </thead>
+            <tbody>
+
+                <tr>
+                    <td>Massachusetts Institute of Technology</td>
+                    <td>20000 USD/year</td>
+                <td>Massachusetts</td>
+            </tr>
+            <tr>
+                <td>Stanford University</td>
+                <td>20000 USD/year</td>
+                <td>California</td>
+            </tr>
+            <tr>
+                <td>Harvard University</td>
+                <td>18000 USD/year</td>
+                <td>Massachusetts</td>
+            </tr>
+            <tr>
+                <td>Yale University</td>
+                <td>18000 USD/year</td>
+                <td>Connecticut</td>
+            </tr>
+            <tr>
+                <td>Princeton University</td>
+                <td>19000 USD/year</td>
+                <td>New Jersey</td>
+            </tr>
+        </tbody>
+        </table>
+
+        <div class="row my-1 d-flex justify-content-center border border-default">
+            <h6 class="text-center fw-bold my-1">Ads</h6>
+            {{ad | GetAd_size:'500x400' | safe}}
+            {{ad | GetAd_size:'300x200' | safe}}
+          </div>
+</div>
+{% endblock content %}

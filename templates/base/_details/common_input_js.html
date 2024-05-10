@@ -1,0 +1,128 @@
+<script>
+    $(document).ready(function () {
+        function serverSideFiltering(params, callback) {
+          console.log(params)
+          var xhr = new XMLHttpRequest();
+          xhr.open('GET', '{% url "utils-college-list" %}?q=' + params.data.term, true);
+          xhr.onload = function () {
+            if (xhr.status === 200) {
+              var data = JSON.parse(xhr.responseText);
+              callback(data);
+            }
+          };
+          xhr.send();
+        }
+        function serverSideFiltering2(params, callback) {
+          const country_p = document.getElementById("inputcountry").value;
+          console.log(params,country_p)
+          var xhr = new XMLHttpRequest();
+          xhr.open('GET', '{% url "utils-country-list-world" %}?q=' + params.data.term+"&c="+country_p, true);
+          xhr.onload = function () {
+            if (xhr.status === 200) {
+              var data = JSON.parse(xhr.responseText);
+              callback(data);
+            }
+          };
+          xhr.send();
+        }
+        $('#inputcollege').select2({
+          theme: 'bootstrap-5',
+          ajax: {
+            transport: serverSideFiltering,
+            processResults: function (data) {
+              return {
+                results: $.map(data, function(college) {
+                    return {
+                        id: college,
+                        text: college
+                    };
+                })
+              };
+            },
+            cache: true
+          },
+          minimumInputLength: 2,
+          placeholder: 'Search for College',
+          tags: true,
+        });
+    
+        $('#inputcollege_preferred').select2({
+          theme: 'bootstrap-5',
+          ajax: {
+            transport: serverSideFiltering2,
+            processResults: function (data) {
+              return {
+                results: $.map(data, function(college_w) {
+                    return {
+                        id: college_w,
+                        text: college_w
+                    };
+                })
+              };
+            },
+            cache: true
+          },
+          minimumInputLength: 1,
+          allowClear: true,
+          maximumSelectionLength: 5,
+          placeholder: 'Search for College or Manually enter',
+          tags: true,
+        });
+    
+        $('#inputcountry').select2({
+          theme: 'bootstrap-5',
+          language: 'en',
+          ajax: {
+            url: '{% url "utils-country-list" %}',
+            processResults: function (data) {
+              return {
+                results: $.map(data, function(country_name) {
+                    return {
+                        id: country_name,
+                        text: country_name
+                    };
+                })
+              };
+            },
+            cache: true
+          },
+          placeholder: 'Select a Country',
+        });
+    
+        $('#inputcourse').select2({
+          theme: 'bootstrap-5',
+          language: 'en',
+          //minimumResultsForSearch: Infinity,
+          placeholder: 'Type of Study',
+          tags:true,
+        });
+    
+        $('#inputseason').select2({
+          theme: 'bootstrap-5',
+          language: 'en',
+          minimumResultsForSearch: Infinity,
+          placeholder: 'Semesters',
+        });
+    
+        $('.select2-container--bootstrap-5 .select2-selection--single').addClass('form-control');
+        $('.select2-container--default .select2-selection--single .select2-selection__arrow').addClass('btn btn-light');
+        $('.select2-container--default .select2-selection--single .select2-selection__rendered').addClass('form-control');
+        $('.select2-container--bootstrap-5 .select2-selection--multiple .select2-selection__rendered .select2-selection__choice .select2-selection__choice__remove').addClass('mx-1');
+        $('.select2-container--bootstrap-5 .select2-selection--multiple .select2-selection__clear').css("left","0.55rem");
+      });
+      const input = document.querySelector("#inputmobile_no");
+      window.intlTelInput(input, {
+        separateDialCode: true,
+        hiddenInput: "mobile_no_full",
+        nationalMode: false, 
+        preferredCountries: ["in"],
+        initialCountry: "auto",
+        geoIpLookup: callback => {
+          fetch("https://ipapi.co/json")
+            .then(res => res.json())
+            .then(data => callback(data.country_code))
+            .catch(() => callback("in"));
+        },
+        utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/utils.js",
+      });
+    </script>

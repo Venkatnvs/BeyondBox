@@ -1,0 +1,110 @@
+{% extends 'ctm_admin/base/index.html' %}
+
+{% block title %}
+{{filter_course}} Course Applied List | {{site_name}} Admin
+{% endblock title %}
+
+{% block content %}
+<div class="row mb-3">
+    <div class="col-md-12 d-flex align-items-center">
+        <h2 class="d-inline-flex p-0 m-0">All {{filter_course}} Course Applied List</h2>
+    </div>
+</div>
+<div class="row mb-2">
+    <div class="col">
+        <div style="gap: 15px;" class="col d-flex">
+            <a href="{% url 'ctm_admin-all-competitive-courses-export-excel' %}?filter={{filter_course}}" class="btn btn-default">Export <b>Excel</b> <i class="bi bi-file-earmark-spreadsheet-fill"></i></a>
+            <a href="{% url 'ctm_admin-all-competitive-courses-export-csv' %}?filter={{filter_course}}" class="btn btn-default">Export <b>Csv</b> <i class="fa-solid fa-file-csv"></i></a>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="card py-1 px-1">
+        <div class="card-body p-1">
+            <div class="table-responsive">
+                <div class="row">
+                    <div class="col-md-12 ctm_table">
+                        <table class="table table-hover table-sm">
+                            <thead class="table-secondary">
+                                <tr>
+                                    <th class="text-default">Name</th>
+                                    <th class="text-default">Email</th>
+                                    <th class="text-default">Mobile No</th>
+                                    <th class="text-default">Date Applied</th>
+                                    <th class="text-default">Details</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for i in courses %}
+                                <tr>
+                                    <td>{{ i.user.full_name }}</td>
+                                    <td>{{ i.user.email }}</td>
+                                    <td>{{ i.user.mobile_number }}</td>
+                                    {% if filter %}
+                                    <td>{{filter}}</td>
+                                    {% else %}
+                                    <td>{{i.created_at}}</td>
+                                    {% endif %}
+                                    <td>
+                                        <div class="dropdown">
+                                            <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" data-bs-boundary="window" aria-expanded="false">
+                                                Select an option
+                                            </button>
+                                            <ul class="dropdown-menu">
+                                                <li><a class="dropdown-item" href=""><i class="fa-solid fa-eye"></i> View Details</a></li>
+                                                <li><a class="dropdown-item" href=""><i class="fa-solid fa-pen-to-square"></i> Edit</a></li>
+                                            </ul>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+{% block scripts %}
+<script type="text/javascript" src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('.table').DataTable();
+    } );
+</script>
+<script>
+    $('.table-responsive').on('show.bs.dropdown', function () {
+        $('.table-responsive').css( "overflow", "inherit" );
+   });
+   
+   $('.table-responsive').on('hide.bs.dropdown', function () {
+        $('.table-responsive').css( "overflow", "auto" );
+   })
+</script>
+{% endblock scripts %}
+
+
+{% block styles %}
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css">
+<style>
+    .tb-date{
+        min-width: 120px;
+    }
+    .ctm_table .form-control{
+        margin-top: 5px;
+        margin-right: 5px;
+    }
+    .ctm_table .pagination{
+        margin-right: 5px;
+    }
+    .ctm_table .form-select{
+        margin-top: 5px;
+    }
+</style>
+{% endblock styles %}

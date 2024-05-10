@@ -1,0 +1,89 @@
+{% load static %}
+{% load cmutils %}
+<div class="container">
+  <div class="row">
+    <div class="col-md-10">
+      <section id="hero" class="hero">
+        <div class="container position-relative thanks_mn">
+          <div class="row gy-5" data-aos="fade-in">
+            <div class="col-lg-7 order-2 order-lg-1 d-flex flex-column justify-content-center text-center">
+              <h2 class="text-center">Thanks For Applying in {{site_name}}</h2>
+              <p>We will get in touch soon</p>
+              <div class="d-flex justify-content-evenly justify-content">
+                <a href="{% url 'dashboard-profile' %}" class="btn-get-started">Update Profile</a>
+                <a href="{% url 'utils-contact-us' %}" class="btn-get-started">Contact Us</a>
+              </div>
+            </div>
+            <div class="col-lg-5 order-1 order-lg-2 d-flex justify-content-center">
+              <img src="{% static 'main/img/thanks_page_logo.png' %}" class="img-fluid thanks_mn_img" alt="thanks_logo" data-aos="zoom-out" data-aos-delay="100">
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+    <div class="col-md-2 border border-default">
+      <h6 class="text-center fw-bold my-1">Ads</h6>
+      <div class="large-screen d-flex justify-content-center row my-2">
+        {{ad | GetAd_size:'300x600' | safe}}
+      </div>
+      <div class="small-screen justify-content-center row my-2">
+        {{ad | GetAd_size:'300x200' | safe}}
+      </div>
+    </div>
+  </div>
+</div>
+<div class="container bg-default">
+  <div class="row mx-1">
+    <h3 class="text-white text-center mt-2">Applied Colleges</h3>
+    <div class="card p-1">
+      <div class="table-responsive">
+        <table class="table table-hover table-sm">
+          <thead class="">
+              <tr>
+                  <th class="text-default">Course</th>
+                  <th class="text-default">Preferred College</th>
+                  <th class="text-default">Abroad Year</th>
+                  <th class="text-default">Abroad Season</th>
+                  <th class="text-default">Is Approved</th>
+                  <th class="text-default">Last Updated</th>
+              </tr>
+          </thead>
+          <tbody>
+              {% for i in courses %}
+                  <tr>
+                      <td>{{ i.course }}</td>
+                      <td>
+                        <ul>
+                          {% for j in i.preferred_college_list %}
+                              <li>{{ j }}</li>
+                          {% endfor %}
+                        </ul>
+                      </td>
+                      <td>{{ i.abroad_year }}</td>
+                      <td>{{ i.abroad_season }}</td>
+                      <td>
+                        {% if i.is_active %}
+                        <span class="badge bg-success">
+                            <i class="fa-solid fa-check"></i>
+                        </span>
+                        {% else %}
+                        <span class="badge bg-warning">
+                            <i class="fa-solid fa-xmark"></i>
+                        </span>
+                        {% endif %}
+                      </td>
+                      <td>{{ i.last_updated }}</td>
+                  </tr>
+              {% endfor %}
+          </tbody>
+      </table>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="container">
+  <div class="d-flex justify-content-center row my-2">
+    {{ad | GetAd_size:'500x400' | safe}}
+    {{ad | GetAd_size:'300x200' | safe}}
+  </div>
+</div>

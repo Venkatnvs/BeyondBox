@@ -1,0 +1,42 @@
+{% extends 'ctm_admin/base/index.html' %}
+
+{% block title %}
+Ads System | {{site_name}} Admin
+{% endblock title %}
+
+{% block content %}
+<div class="row mb-3">
+    <div class="col-md-12 d-flex align-items-center">
+        <h2 class="d-inline-flex p-0 m-0">All Ads List</h2>
+        <a href="{% url 'ctm_admin-ads_create' %}" class="btn btn-default mx-4">Create Ad <i class="fa-solid fa-square-plus"></i></a>
+    </div>
+</div>
+<div class="row">
+    {% for ad in object_list %}
+    <div class="col-md-3 m-0 mb-1 p-1 border-bottom border-default border-2">
+        <div class="card m-0">
+            {% if ad.url %}
+            <img src="{{ ad.url }}" class="card-img-top img-fluid" alt="{{ ad.title }}"
+                style="height: 150px; object-fit: cover;">
+            {% else %}
+            <div class="card-img-top"
+                style="height: 150px; background-color: #eee; display: flex; align-items: center; justify-content: center;">
+                No Image
+            </div>
+            {% endif %}
+            <div class="card-body p-2">
+                <h6 class="card-title">{{ ad.title }}</h6>
+                <p class="card-text m-0">Size: {{ ad.size }}</p>
+                <div class="form-check form-switch">
+                    <label class="form-check-label">Active</label>
+                    <input readonly disabled class="form-check-input" type="checkbox" role="switch" {% if ad.is_active %}checked{% endif %}>
+                </div>
+                <p class="card-text m-0 text-xs">Created at: {{ ad.created_at }}</p>
+                <a href="{% url 'ctm_admin-ads_edit' ad.uuid %}" class="btn btn-primary">Edit</a>
+                <a href="{% url 'ctm_admin-ads_detail' ad.uuid %}" class="btn btn-info">View Details</a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock content %}

@@ -1,0 +1,21 @@
+{% extends 'ctm_admin/base/index.html' %}
+
+{% block title %}
+Delete UserType | {{site_name}} Admin
+{% endblock title %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header py-2">
+        <h2>Delete User Type</h2>
+    </div>
+    <div class="card-body pt-2">
+        <p>Are you sure you want to delete "<span class="fw-bold">{{ usertype.name }}</span>"?</p>
+        <form method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">Yes, delete</button>
+            <a href="{% url 'ctm_admin-usertype_detail' pk=usertype.pk %}" class="btn btn-secondary">Cancel</a>
+        </form>
+    </div>
+</div>
+{% endblock content %}
