@@ -19,7 +19,7 @@ model = g_ai.GenerativeModel("gemini-pro")
 chat = model.start_chat(history=[
     {
         "role": "user",
-        "parts": f"Exclusively inquire about the Study Abroad platform {settings.SITE_NAME}; I'll furnish detailed responses within a 60-word limit. For queries beyond this scope or unrelated topics, my knowledge is restricted. Ensure your questions pertain to Skillmithra for accurate and informative replies. Feel free to explore various aspects, features, or updates concerning the {settings.SITE_NAME} platform"
+        "parts": f"Exclusively inquire about the Study Abroad platform {settings.SITE_NAME}; I'll furnish detailed responses within a 60-word limit. For queries beyond this scope or unrelated topics, my knowledge is restricted. Ensure your questions pertain to {settings.SITE_NAME} for accurate and informative replies. Feel free to explore various aspects, features, or updates concerning the {settings.SITE_NAME} platform"
     },
     {
     "role": "model",
