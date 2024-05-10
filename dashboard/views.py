@@ -12,6 +12,8 @@ from django.conf import settings
 import google.generativeai as g_ai
 from django.db.models import Q
 from django.views.decorators.csrf import csrf_exempt
+from django.http import JsonResponse
+import json
 
 g_ai.configure(api_key=settings.GOOGLE_API_KEY)
 
@@ -124,29 +126,6 @@ class UpdatePassword(CheckBasicAuthMixin,View):
 def AboutPage(request):
     return render(request,'dashboard/about/index.html')
 
-# Cost Of Studys
-
-def CostStudyUsa(request):
-    return render(request, 'dashboard/cost_study/usa.html')
-
-def CostStudyAustralia(request):
-    return render(request, 'dashboard/cost_study/australia.html')
-
-def CostStudyUk(request):
-    return render(request, 'dashboard/cost_study/uk.html')
-
-def CostStudyCanada(request):
-    return render(request, 'dashboard/cost_study/canada.html')
-
-def CostStudyNewZealand(request):
-    return render(request, 'dashboard/cost_study/new-zealand.html')
-
-from django.http import JsonResponse
-import json
-def Test(request):
-    return render(request,'dashboard/test.html')
-def Test3(request):
-    return render(request,'dashboard/test3.html')
     
 def gemini_chat(user_message):
     try:

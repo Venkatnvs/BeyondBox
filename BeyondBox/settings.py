@@ -35,7 +35,6 @@ INSTALLED_APPS = [
     'dashboard',
     'ctm_admin',
     'ctm_admin.subapps.ads',
-    'applies',
     'analysis',
 ]
 
