@@ -19,4 +19,7 @@ urlpatterns = [
     # Tests
     path("aptitude-test", AptitudeTest, name="dashboard-aptitude-test"),
     path("soft-skills-test", SoftSkillsTest, name="dashboard-soft-skills-test"),
+
+    # Premium
+    path("premium/", GetPremium, name="dashboard-get-premium"),
 ]

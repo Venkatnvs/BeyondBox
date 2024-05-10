@@ -323,6 +323,13 @@ Soft Skill Traning | {{site_name}}
             }, 1000);
         }
 
+        // Shuffle options
+        selectedQuestions.forEach(function (question) {
+            question.options.sort(function () {
+                return Math.random() - 0.5;
+            });
+        });
+
         // Shuffle questions
         selectedQuestions.sort(function () {
             return Math.random() - 0.5;

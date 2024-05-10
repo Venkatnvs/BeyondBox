@@ -1,6 +1,5 @@
 {% extends 'base/index.html' %}
 {% load static %}
-{% load cmutils %}
 
 {% block title %}
     Verification | {{ site_name }}
@@ -8,14 +7,45 @@
 
 {% block styles %}
 <style>
-    #videoElement {
-        width: 100%;
-        max-width: 640px;
+    #main_cam_video{
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+    }
+    #canvas_video {
+        position: absolute;
     }
 </style>
 {% endblock styles %}
 
 {% block content %}
+<div class="modal modal-lg fade" id="resultsModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content bg-default text-light">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="staticBackdropLabel">Test Results</h1>
+        </div>
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>Video Results: </h5>
+                    <canvas id="videoChart" height="300" class="mb-4 text-light"></canvas>
+                </div>
+                <div class="col-md-6">
+                    <h5>Audio Results: </h5>
+                    <div id="audioResult"></div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+          <button id="done_res" type="button" class="btn btn-primary">Done</button>
+        </div>
+      </div>
+    </div>
+  </div>
 <h2 class="text-center bg-white shadow-sm py-1 bg-opacity-75 text-dark fw-bold border border-default border-2 rounded-pill">
     Verify your self</h2>
 <div class="container">
@@ -23,27 +53,34 @@
         <div class="col-md-6">
             <div class="card h-100">
                 <div class="card-body">
-                    <video id="videoElement" autoplay></video> 
+                    <div id="main_cam_video">
+                        <video id="videoElement" width="500" height="400" autoplay muted></video>
+                        <canvas id="canvas_video"></canvas>
+                    </div>
                 </div>
                 <div class="card-footer text-center">
                     <button id="startRecording" class="btn btn-default w-50 mx-auto">Start Recording</button>
                     <button id="stopRecording" class="btn btn-default w-50 mx-auto" style="display: none;">Stop Recording</button> 
-                </div>
-                <div class="d-flex justify-content-center row my-2">
-                    {{ad | GetAd_size:'300x200' | safe}}
                 </div>
             </div>
         </div>
         <div class="col-md-6 bg-default">
             <div class="card bg-default h-100">
                 <div class="card-body mt-2">
-                    <h3 id="result_title" class="text-center text-decoration-underline">Transcription</h3>
-                    <p id="transcription">
-                        start speaking about your self .....
-                    </p>
-                    <p id="video_result"></p>
-                    <div class="spinner-border text-primary" role="status">
-                        <span class="visually-hidden">Loading...</span>
+                    <div id="video_div">
+                        <h4 class="text-center text-decoration-underline">Video Test</h4>
+                        <p class="text-center my-0 py-0 fs-6">Complete all the expressions to finish the test.</p>
+                        <p style="font-size: 12px;" class="text-center my-0 py-0">Hold the expression for a few seconds.</p>
+                        <div id="result_exp" class="text-center">
+                            
+                        </div>
+                    </div>
+                    <hr>
+                    <div id="audio_div">
+                        <h4 class="text-center text-decoration-underline">Audio Test</h4>
+                        <p class="text-center my-0 py-0 fs-6">Speak the following text.</p>
+                        <p id="transcription" class="text-center my-2 py-0 text-capitalize fs-5"></p>
+                        <button id="end_sp" class="btn btn-danger btn-sm">Stop</button>
                     </div>
                 </div>
             </div>
@@ -53,82 +90,115 @@
 {% endblock content %}
 
 {% block scripts %}
+<script src="{% static 'analysis/face-api.min.js' %}"></script>
 <script>
-    $(".spinner-border").hide();
+    $("#audio_div").hide();
+    $("#video_div").show();
+    let timerInterval;
+    let recordingStarted = false;
+    const maxRecordingTime = 60 * 1000; // 1 minute in milliseconds
+    let recordingTime = 0;
+    const expressionsToTest = ['neutral', 'happy', 'sad', 'angry', 'surprised'];
+    const expressionIcons = {
+        correct: '<i class="fas fa-check-circle text-success"></i>',
+        wrong: '<i class="fas fa-times-circle text-danger"></i>'
+    };
+    const speechToTest = 'Hello, I am Verifying my self ...............'
+
     document.getElementById('startRecording').addEventListener('click', startRecording);
     document.getElementById('stopRecording').addEventListener('click', stopRecording);
 
-    var mediaRecorder;
-    var chunks = [];
+    const video = $('#videoElement')[0];
+    const expressionCount = {
+        neutral: 0,
+        happy: 0,
+        sad: 0,
+        angry: 0,
+        fearful: 0,
+        disgusted: 0,
+        surprised: 0
+    }
+
+    Promise.all([
+        faceapi.nets.tinyFaceDetector.loadFromUri('/static/models'),
+        faceapi.nets.faceLandmark68Net.loadFromUri('/static/models'),
+        faceapi.nets.faceRecognitionNet.loadFromUri('/static/models'),
+        faceapi.nets.faceExpressionNet.loadFromUri('/static/models')
+    ]).then(startRecording)
+
     var recognition = new webkitSpeechRecognition();
     var transcript_text = '';
     recognition.lang = 'en-US';
     recognition.continuous = true;
     recognition.interimResults = false;
-    
-    navigator.mediaDevices.getUserMedia({ audio:false, video: true })
-        .then(function(stream) {
-            var video = document.getElementById('videoElement');
-            video.srcObject = stream;
-
-            // Start transcription as soon as the audio stream becomes available
-            recognition.start();
-        })
-        .catch(function(err) {
-            console.log('Error: ' + err.message);
-        });
+    recognition.maxAlternatives = 1;
 
     function startRecording() {
-        mediaRecorder = new MediaRecorder(videoElement.srcObject);
-
-        mediaRecorder.ondataavailable = function(e) {
-            chunks.push(e.data);
-        };
-
-        mediaRecorder.onstop = function(e) {
-            var blob = new Blob(chunks, { 'type' : 'video/mp4' });
-            const videoFile = new File([blob], 'video.mp4');
-            var formData = new FormData();
-            formData.append('video', videoFile);
-            
-            fetch('{% url "analysis-upload" %}', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                console.log('Video uploaded successfully:', data);
-                const emotionList = document.getElementById('video_result');
-                emotionList.innerHTML = `
-                    <li class="list-group-item">Confidence Level: ${data.confidence_level}</li>
-                    <li class="list-group-item">Expression Counts:</li>
-                    <ul class="list-group">
-                        ${Object.entries(data.expression_counts).map(([emotion, count]) => `<li class="list-group-item">${emotion}: ${count}</li>`).join('')}
-                    </ul>
-                `;
-                $(".spinner-border").hide();
-            })
-            .catch(error => {
-                console.error('Error uploading video:', error);
-            });
-        };
-
-        mediaRecorder.start();
+        navigator.getUserMedia(
+            { video: {
+                width: 500,
+                height: 400
+            } },
+            stream => {
+                video.srcObject = stream;
+                startTimer();
+            },
+            err => console.error(err)
+        )
+        $("#transcription").text(speechToTest);
         document.getElementById('startRecording').style.display = 'none';
         document.getElementById('stopRecording').style.display = 'block';
+        recordingStarted = true;
+        askForExpression();
     }
 
     function stopRecording() {
-        mediaRecorder.stop();
         recognition.stop();
+        clearInterval(timerInterval);
         document.getElementById('startRecording').style.display = 'block';
         document.getElementById('stopRecording').style.display = 'none';
+        recordingStarted = false;
+    }
+
+    function startTimer() {
+        timerInterval = setInterval(() => {
+            recordingTime += 1000;
+            if (recordingTime >= maxRecordingTime && recordingStarted) {
+                stopRecording();
+                alert('Maximum recording time reached.');
+                window.location.reload();
+            }
+        }, 1000);
+    }
+
+    let isAllDone = [];
+    function askForExpression() {
+        if (isAllDone.length<expressionsToTest.length) {
+            $('#result_exp').empty();
+            expressionsToTest.forEach(expression => {
+                if (expressionCount[expression] > 0) {
+                    if (!isAllDone.includes(expression)){
+                        isAllDone.push(expression);
+                    }
+                    $('#result_exp').append(`<p class="text-capitalize fs-5">${expression}: ${expressionIcons.correct}</p>`);
+                } else {
+                    $('#result_exp').append(`<p class="text-capitalize fs-5">${expression}: ${expressionIcons.wrong}</p>`);
+                }
+            });
+            setTimeout(askForExpression, 2000); // Change the delay if needed
+        } else {
+            stopRecording();
+            recognition.start();
+            $("#audio_div").show();
+            $("#video_div").hide();
+        }
     }
 
     recognition.onresult = function(event) {
         for (let i = event.resultIndex; i < event.results.length; i++) {
             if (event.results[i].isFinal) {
-                transcript_text += event.results[i][0].transcript + ', ';
+                const transcript = event.results[i][0].transcript;
+                transcript_text += transcript;
             }
         }
         document.getElementById('transcription').innerText = transcript_text;
@@ -136,7 +206,6 @@
 
     recognition.onend = function() {
         console.log('Speech recognition service disconnected');
-        $(".spinner-border").show();
         fetch('{% url "analysis-audio-analysis" %}', {
             method: 'POST',
             headers: {
@@ -147,21 +216,114 @@
         .then(response => response.json())
         .then(data => {
             console.log('Transcription uploaded successfully:', data);
+            showResultsModal(data);
             transcript_text = '';
-            $('#result_title').text('Result:');
-            const transcriptionList = document.getElementById('transcription');
-            transcriptionList.innerHTML = `
-                <p>Transcription: ${data.transcription}</p>
-                <li class="list-group-item">Average Sentence Length: ${data.avg_sentence_length}</li>
-                <li class="list-group-item">Average Word Length: ${data.avg_word_length}</li>
-                <li class="list-group-item">Fluency Score: ${data.fluency_score * 100}</li>
-                <li class="list-group-item">Grammar Errors:</li>
-                <ul class="list-group">
-                    ${data.grammar_errors.map(error => `<li class="list-group-item">${error}</li>`).join('')}
-                </ul>
-            `;
         })
     };
+
+    function showResultsModal(audioData) {
+        const expressionLabels = Object.keys(expressionCount);
+        const expressionValues = Object.values(expressionCount);
+        const videoChartOptions = {
+            type: 'bar',
+            data: {
+                labels: expressionLabels,
+                datasets: [{
+                    label: 'Expression Count',
+                    data: expressionValues,
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(153, 102, 255, 0.2)',
+                        'rgba(255, 159, 64, 0.2)',
+                        'rgba(230, 25, 75, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)',
+                        'rgba(230, 25, 75, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            color: "#ffffff",
+                        }
+                    },
+                    x: {
+                        ticks: {
+                            color: "#ffffff",
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        labels: {
+                            color: "#ffffff",
+                        },
+                    },
+                    labels: {
+                        color: "#ffffff",
+                    }
+                },
+            }
+        };
+        const videoChartCanvas = document.getElementById('videoChart');
+        new Chart(videoChartCanvas, videoChartOptions);
+
+        const audioResult = document.getElementById('audioResult');
+        audioResult.innerHTML = `
+            <p>Transcription: ${audioData.transcription}</p>
+            <li class="list-group-item">Average Sentence Length: ${audioData.avg_sentence_length}</li>
+            <li class="list-group-item">Average Word Length: ${audioData.avg_word_length}</li>
+            <li class="list-group-item">Fluency Score: ${audioData.fluency_score * 100}</li>
+            <li class="list-group-item">Grammar Errors:</li>
+            <ul class="list-group">
+                ${audioData.grammar_errors.map(error => `<li class="list-group-item">${error}</li>`).join('')}
+            </ul>
+        `;
+        const resultsModal = new bootstrap.Modal(document.getElementById('resultsModal'));
+        resultsModal.show();
+}
+
+$("#done_res").click(function(){
+    window.location = '/'
+});
+
+$("#end_sp").click(function(){
+    stopRecording();
+});
+
+    const canvas = document.getElementById('canvas_video')
+    video.addEventListener('play', () => {
+        document.getElementById('main_cam_video').append(canvas)
+        const displaySize = { width: video.width, height: video.height }
+        faceapi.matchDimensions(canvas, displaySize)
+        setInterval(async () => {
+            const detections = await faceapi.detectAllFaces(video, new faceapi.TinyFaceDetectorOptions()).withFaceLandmarks().withFaceExpressions()
+            const resizedDetections = faceapi.resizeResults(detections, displaySize)
+            canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height)
+            faceapi.draw.drawDetections(canvas, resizedDetections)
+            faceapi.draw.drawFaceLandmarks(canvas, resizedDetections)
+            faceapi.draw.drawFaceExpressions(canvas, resizedDetections)
+            decoration = resizedDetections[0].expressions
+            for (const [key, value] of Object.entries(decoration)) {
+                if (value > 0.5) {
+                    expressionCount[key] += 1
+                }
+            }
+        }, 100)
+    })
 </script>
 {% endblock scripts %}
 

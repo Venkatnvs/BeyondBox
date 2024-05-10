@@ -168,3 +168,7 @@ def analyze_expression(roi_gray):
         detected_expression = 'Neutral'
 
     return detected_expression
+
+
+def FaceRecognition(request):
+    return render(request, 'analysis/AV/FaceRecognition.html')

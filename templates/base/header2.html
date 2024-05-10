@@ -22,10 +22,11 @@
           <li><a class="nav-link" href="{% url 'utils-contact-us' %}">Contact</a></li>
           {% if request.user.is_authenticated %}
             {% include 'base/_details/profile_on_login.html' %}
+            <li><a href="{% url 'dashboard-get-premium' %}" class="header_lr_btn_reg btn btn-default text-light m-0 p-0 border border-1 border-light-subtle" style="border-radius: 50px!important;"><i class="fa-solid fa-circle-dollar-to-slot fa-2xl"></i>&nbsp;Get Premium</a></li>
           {% else %}
             <li><a href="{% url 'accounts-login' %}" class="header_lr_btn_login btn btn-outline-light">Login</a></li>
             <li><a href="{% url 'accounts-register' %}" class="header_lr_btn_reg btn btn-light text-default">SignUp</a></li>
-            {% endif %}
+          {% endif %}
         </ul>
         
         <i class="bi bi-list mobile-nav-toggle"></i>

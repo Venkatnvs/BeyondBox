@@ -154,3 +154,7 @@ def AptitudeTest(request):
 
 def SoftSkillsTest(request):
     return render(request,'dashboard/tests/soft-skills.html')
+
+
+def GetPremium(request):
+    return render(request,'dashboard/premium.html')
