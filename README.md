@@ -12,8 +12,16 @@ Addressing the employability gap in India, our solution integrates aptitude trai
 
 ## Our Working
 
+#### Tech Stack
 ![7](https://github.com/Venkatnvs/BeyondBox/assets/134759689/dcc9a8e0-1831-4545-942a-828ab41be079)
 
+#### Some Videos
+
+https://github.com/Venkatnvs/BeyondBox/assets/134759689/126dfe9e-c38f-429b-9a07-a49f6ac98e01
+
+https://github.com/Venkatnvs/BeyondBox/assets/134759689/7a25d70c-fcb0-4148-8ef8-9db7a8c87fa4
+
+https://github.com/Venkatnvs/BeyondBox/assets/134759689/42901711-2f8f-4b57-a74c-aabcb2d7c7e9
 
 ## Business Models
 
